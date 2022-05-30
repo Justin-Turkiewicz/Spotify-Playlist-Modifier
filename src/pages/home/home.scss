@@ -1,0 +1,13 @@
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+// @include media-breakpoint-down(sm) {  }
+// @include media-breakpoint-down(md) {  }
+// @include media-breakpoint-down(lg) {  }
+// @include media-breakpoint-down(xl) {  }
+// @include media-breakpoint-down(xxl) {  }

@@ -1,0 +1,39 @@
+#topBackground{
+    height: 20em;
+    padding-top: 1em;
+    background: linear-gradient(rgb(86, 86, 28), rgb(197, 197, 43));
+    position: relative;
+}
+#rowLinks > .col-xs-1.col-sm-1.col-md-1.col-lg-1:hover {
+    background-color: purple;
+    border-radius: 10px;
+}
+.col-xs-1.col-sm-1.col-md-1.col-lg-1 > p{
+    color: white;
+}
+#linksTitleSpacer{
+    position: absolute;
+    height: 20%;
+}
+#title{
+    position: absolute;
+    left: 48.5%;
+    transform: translate(-48.5%, 0);
+    text-align: center;
+}
+#gistOfThePurpose{
+    position: absolute;
+    left: 48.5%;
+    top: 25%;
+    transform: translate(-48.5%, 0);
+    text-align: center;
+    height: 3em;
+    margin-top: 3.5em;
+}
+#titleAndGist{
+    height: 10em;
+    margin-top: 3.3em;
+}
+#secondRow{
+    height: 100%;
+}
