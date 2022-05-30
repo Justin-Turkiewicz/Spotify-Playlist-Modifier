@@ -1,13 +1,49 @@
-$grid-breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  xxl: 1400px
-);
-// @include media-breakpoint-down(sm) {  }
-// @include media-breakpoint-down(md) {  }
-// @include media-breakpoint-down(lg) {  }
-// @include media-breakpoint-down(xl) {  }
-// @include media-breakpoint-down(xxl) {  }
+#topBackground{
+  width: 100%;
+  height: 100%;
+  padding-top: 1em;
+  background: linear-gradient(rgb(86, 86, 28), rgb(197, 197, 43));
+  position: relative;
+}
+#homeContainer{
+  width: 100%;
+  height: 100%;
+}
+#title{
+  position: relative;
+  text-align: center;
+}
+#gistOfThePurpose{
+  position: relative;
+  text-align: center;
+}
+#gistOfThePurpose > p{
+  background-color: purple;
+  color: white;
+  border-radius: 1em;
+  padding: 0.5em;
+  text-align: center;
+}
+#titleAndGist{
+  height: 10em;
+
+}
+#loginRow{
+  text-align: center;
+}
+input[type=text], select {
+  width: 100%;
+  padding: 1em 1em;
+  margin: 0.5em 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+#logInSpotify{
+  background-color: purple;
+  color: white;
+  border-radius: 15%;
+  border-style: none;
+  padding: 0.5em;
+}
