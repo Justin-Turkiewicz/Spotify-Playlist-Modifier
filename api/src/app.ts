@@ -1,8 +1,9 @@
 import express, { Application, Request, Response, NextFunction} from 'express';
 
 const app: express.Application = express();
-const port = 3000
-
+const port = 5000
+var cors = require("cors");
+app.use(cors());
 var testAPIRouter = require("./routes/testAPI");
 app.use("/testAPI", testAPIRouter);
 

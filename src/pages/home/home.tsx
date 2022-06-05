@@ -5,16 +5,26 @@ import './home.scss';
 
 class Home extends React.Component{
 state: any
+email: string
+password: string
+// loginSpot: LoginSpot
 constructor(props: any){
     super(props);
+    this.email = "";
+    this.password ="";
+    // this.loginSpot = new LoginSpot(props, "", "");
     this.state = {
         displayLoginSpot: false
     };
 }
 
-addSpot = () => {
+addSpot = (email: string, password: string) => {
+    this.email = email;
+    this.password = password;
     this.setState({displayLoginSpot: true}, () => {
-        console.log(this.state.displayLoginSpot)
+        console.log("State login: "+this.state.displayLoginSpot);
+        // console.log("LoginSpot EmailOrUsnermae: "+this.loginSpot.);
+        // console.log("LoginSpot password: "+this.loginSpot.getPassword());
     });
 }
 
@@ -43,7 +53,10 @@ render()  {
                         <input type="text" id="password" name="password" placeholder="Enter Password" />
                     </div>
                     <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="spotUsername">
-                        <button id="logInSpotify" onClick={() => this.addSpot()}>Log In</button>
+                        <button id="logInSpotify" onClick={() => this.addSpot(
+                            (document.getElementById("emailUsername") as HTMLInputElement).value,
+                            (document.getElementById("password") as HTMLInputElement).value)
+                        }>Log In</button>
                     </div>
                     {/* <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="spotUsername">
                         <button id="logInSpotify" onClick={() => loginSpotify(
@@ -53,7 +66,8 @@ render()  {
                 </div>
             </div>
             { this.state.displayLoginSpot && (
-                    <LoginSpot />
+                    <LoginSpot eOu={this.email}
+                    pass={this.password} />
                 )}
         </div>
         </React.Fragment>

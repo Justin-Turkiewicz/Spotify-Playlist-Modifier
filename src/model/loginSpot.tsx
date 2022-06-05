@@ -1,20 +1,52 @@
+import axios from "axios";
 import React, { Component } from "react";
-
-class LoginSpot extends Component{
+interface loginProps{
+  eOu: string;
+  pass: string;
+}
+class LoginSpot extends Component<loginProps>{
     state: any;
-    constructor(props: any){
+    // private emailOrUsername: string = "";
+    // private password: string = "";
+    constructor(props: loginProps, emailOrUsername: string, password: string){
       super(props);
       this.state = {
-          weather: "Not gotten the weather yet"
+        emailOrUsername: emailOrUsername,
+        password: password
       };  
     }
-    getState(){
-      return this.state.weather;
+    static getDerivedStateFromProps(props: loginProps, state: any){
+      return {emailOrUsername: props.eOu,
+              password: props.pass}
+    }
+    // setEmailOrUsername(newEmailOrUsername: string){
+    //   this.emailOrUsername = newEmailOrUsername;
+    // }
+    // setPassword(newPassword: string){
+    //   this.password = newPassword;
+    // }
+    // getEmailOrUsername(){
+    //   return this.emailOrUsername;
+    // }
+    // getPassword(){
+    //   return this.password;
+    // }
+    // getState(){
+    //   return this.state.weather;
+    // }
+    componentDidMount = () => {
+      axios.get('http://localhost:5000/testAPI').then(res => {
+        this.setState({}, () => console.log(res));
+
+      }
+      )
     }
     render() {
       return (
         <div>
-          <p>The weather is: {this.state.weather} </p>
+          <p>The user logged in.<br />
+             Email or Username: {this.state.emailOrUsername} <br />
+             Password: {this.state.password} </p>
         </div>
       );
     }
