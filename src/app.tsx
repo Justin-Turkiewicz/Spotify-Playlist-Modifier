@@ -7,8 +7,6 @@ class  App extends React.Component {
             <div id="MainParent">
               <Main />   
             </div>
-            
-          
     );
   }
 }

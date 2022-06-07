@@ -5,7 +5,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
-app.get('/', (req, res) => {
-    res.send('Hello');
+const port = 5000;
+var cors = require("cors");
+app.use(cors());
+debugger;
+var testAPIRouter = require("./routes/testAPI");
+app.use("/testAPI", testAPIRouter);
+app.set('view engine', 'ejs');
+app.get('/', function (req, res) {
+    res.render('index', {});
 });
-app.listen(5000, () => console.log('Server running'));
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+});
+//# sourceMappingURL=app.js.map

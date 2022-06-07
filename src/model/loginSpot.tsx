@@ -6,8 +6,6 @@ interface loginProps{
 }
 class LoginSpot extends Component<loginProps>{
     state: any;
-    // private emailOrUsername: string = "";
-    // private password: string = "";
     constructor(props: loginProps, emailOrUsername: string, password: string){
       super(props);
       this.state = {
@@ -19,21 +17,6 @@ class LoginSpot extends Component<loginProps>{
       return {emailOrUsername: props.eOu,
               password: props.pass}
     }
-    // setEmailOrUsername(newEmailOrUsername: string){
-    //   this.emailOrUsername = newEmailOrUsername;
-    // }
-    // setPassword(newPassword: string){
-    //   this.password = newPassword;
-    // }
-    // getEmailOrUsername(){
-    //   return this.emailOrUsername;
-    // }
-    // getPassword(){
-    //   return this.password;
-    // }
-    // getState(){
-    //   return this.state.weather;
-    // }
     componentDidMount = () => {
       axios.get('http://localhost:5000/testAPI').then(res => {
         this.setState({}, () => console.log(res));
