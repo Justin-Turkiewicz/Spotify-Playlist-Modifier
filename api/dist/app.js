@@ -8,7 +8,6 @@ const app = (0, express_1.default)();
 const port = 5000;
 var cors = require("cors");
 app.use(cors());
-debugger;
 var testAPIRouter = require("./routes/testAPI");
 app.use("/testAPI", testAPIRouter);
 app.set('view engine', 'ejs');
