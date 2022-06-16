@@ -2,25 +2,27 @@ import axios from "axios";
 import React, { Component } from "react";
 import { SpotifyInfo } from "../constants/spotify_info";
 interface loginProps{
-  eOu: string;
-  pass: string;
+  client_id: string;
+  client_secret: string;
 }
 class LoginSpot extends Component<loginProps>{
     state: any;
-    constructor(props: loginProps, emailOrUsername: string, password: string){
+    constructor(props: loginProps, client_id: string, client_secret: string){
       super(props);
       this.state = {
-        emailOrUsername: emailOrUsername,
-        password: password
+        client_id: client_id,
+        client_secret: client_secret
       };  
     }
     static getDerivedStateFromProps(props: loginProps, state: any){
-      return {emailOrUsername: props.eOu,
-              password: props.pass}
+      return {client_id: props.client_id,
+              client_secret: props.client_secret}
     }
     componentDidMount = () => {
+      localStorage.setItem("client_id", this.state.client_id);
+      localStorage.setItem("client_secret", this.state.client_secret);
       let url = SpotifyInfo.authorize;
-      url += "?client_id="+ SpotifyInfo.client_id;
+      url += "?client_id="+ this.state.client_id;
       url += "&response_type=code";
       url += "&redirect_uri=" + encodeURI(SpotifyInfo.redirect_uri);
       url += "&show_dialog=true";
@@ -32,7 +34,7 @@ class LoginSpot extends Component<loginProps>{
       //   headers: {
       //     'Content-Type': 'application/json',
       //     'Accept': 'application/json',
-      //     'Authorization': this.state.emailOrUsername,
+      //     'Authorization': this.state.client_id,
       //     'Access-Control-Allow-Origin': 'http://localhost:3000'
       //     // 'Origin': 'http://localhost:3000',
       //   }
@@ -46,8 +48,8 @@ class LoginSpot extends Component<loginProps>{
       return (
         <div>
           <p>The user logged in.<br />
-             Email or Username: {this.state.emailOrUsername} <br />
-             Password: {this.state.password} </p>
+             Email or Username: {this.state.client_id} <br />
+             client_secret: {this.state.client_secret} </p>
         </div>
       );
     }

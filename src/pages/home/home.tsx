@@ -1,30 +1,43 @@
 import * as React from 'react';
 import LoginSpot from '../../model/loginSpot';
+import { PlayListComponent } from '../../model/playlistComponent';
 import Navbar from '../navbar/navbar';
 import './home.scss';
 
 class Home extends React.Component{
 state: any
-email: string
-password: string
+client_id: string
+client_secret: string
 // loginSpot: LoginSpot
 constructor(props: any){
-    super(props);
-    this.email = "";
-    this.password ="";
+    super(props)
+    this.client_id = "";
+    this.client_secret ="";
     // this.loginSpot = new LoginSpot(props, "", "");
     this.state = {
-        displayLoginSpot: false
+        displayPlaylist: false
     };
-}
+    if(sessionStorage.getItem("client_id") != undefined && sessionStorage.getItem("client_secret") != undefined
+    && sessionStorage.getItem("access_token") != undefined && sessionStorage.getItem("refresh_token") != undefined){
+        console.log(sessionStorage.getItem("client_id"))
+        this.state = {
+            displayPlaylist: true
+        };
+    }
 
-addSpot = (email: string, password: string) => {
-    this.email = email;
-    this.password = password;
-    this.setState({displayLoginSpot: true}, () => {
-        console.log("State login: "+this.state.displayLoginSpot);
-        // console.log("LoginSpot EmailOrUsnermae: "+this.loginSpot.);
-        // console.log("LoginSpot password: "+this.loginSpot.getPassword());
+}
+componentDidMount(){
+    if(this.state.displayPlaylist){
+        document.getElementById("loginRow")?.remove();
+    }
+}
+addSpot = (client_id: string, client_secret: string) => {
+    this.client_id = client_id;
+    this.client_secret = client_secret;
+    this.setState({displayPlaylist: true}, () => {
+        console.log("State login: "+this.state.displayPlaylist);
+        // console.log("LoginSpot client_id:" + this.client_id);
+        // console.log("LoginSpot client_secret: "+this.client_secret);
     });
 }
 
@@ -47,37 +60,38 @@ render()  {
                 </div>
                 <div className="row" id="loginRow">
                     <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="spotUsername">
-                        <input type="text" id="emailUsername" name="emailOrUsername" placeholder="Enter Email or Username" />
+                        <input type="text" id="clientId" name="clientId" placeholder="Enter Client ID" />
                     </div>
                     <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="spotUsername">
-                        <input type="text" id="password" name="password" placeholder="Enter Password" />
+                        <input type="text" id="clientSecret" name="clientSecret" placeholder="Enter Client Secret" />
                     </div>
                     <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="spotUsername">
                         <button id="logInSpotify" onClick={() => this.addSpot(
-                            (document.getElementById("emailUsername") as HTMLInputElement).value,
-                            (document.getElementById("password") as HTMLInputElement).value)
+                            (document.getElementById("clientId") as HTMLInputElement).value,
+                            (document.getElementById("clientSecret") as HTMLInputElement).value)
                         }>Log In</button>
                     </div>
                     {/* <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="spotUsername">
                         <button id="logInSpotify" onClick={() => loginSpotify(
-                            (document.getElementById("emailUsername") as HTMLInputElement).value,
-                            (document.getElementById("password") as HTMLInputElement).value)}>Log In</button>
+                            (document.getElementById("client_idUsername") as HTMLInputElement).value,
+                            (document.getElementById("client_secret") as HTMLInputElement).value)}>Log In</button>
                     </div> */}
                 </div>
+                {this.state.displayPlaylist && (<PlayListComponent client_id={this.client_id} client_secret={this.client_secret}/>)}
             </div>
-            { this.state.displayLoginSpot && (
-                    <LoginSpot eOu={this.email}
-                    pass={this.password} />
-                )}
+            {/* { this.state.displayLoginSpot && (
+                    <LoginSpot client_id={this.client_id}
+                    client_secret={this.client_secret} />
+                )} */}
         </div>
         </React.Fragment>
 
     );
 }
 
-loginSpotify = (email: string, password: string): void => {
-    console.log(email);
-    console.log(password);
+loginSpotify = (client_id: string, client_secret: string): void => {
+    console.log(client_id);
+    console.log(client_secret);
 }
 
 }
