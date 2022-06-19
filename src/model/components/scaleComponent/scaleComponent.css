@@ -1,0 +1,7 @@
+#scaleRow{
+    display: flex;
+    flex-direction: column;
+}
+#scaleRow > *{
+    
+}   

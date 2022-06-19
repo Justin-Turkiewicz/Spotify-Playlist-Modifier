@@ -1,7 +1,7 @@
 import React from "react";
 import { Component, ReactNode } from "react";
-import { SpotifyInfo } from "../constants/spotify_info";
-import { addPlaylist, callApi, removeAllItems } from "../packages/spotifyAPICalls/spotifyAPICalls";
+import { SpotifyInfo } from "../../../constants/spotify_info";
+import { addPlaylist, callApi, removeAllItems } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
 interface loginProps{
     client_id: string;
     client_secret: string;
@@ -18,18 +18,18 @@ export class PlayListComponent extends Component<loginProps>{
       };  
     }
     componentDidMount = () => {
-        if(sessionStorage.getItem("client_id") == undefined || sessionStorage.getItem("client_secret") == undefined ||
-            sessionStorage.getItem("access_token") == undefined || sessionStorage.getItem("refresh_token") == undefined){
-        sessionStorage.setItem("client_id", this.state.client_id);
-        sessionStorage.setItem("client_secret", this.state.client_secret);
-        let url = SpotifyInfo.authorize;
-        url += "?client_id="+ this.state.client_id;
-        url += "&response_type=code";
-        url += "&redirect_uri=" + encodeURI(SpotifyInfo.redirect_uri);
-        url += "&show_dialog=true";
-        url += "&scope=user-read-private user-read-email";
-        window.location.href = url;
-        }
+        // if(sessionStorage.getItem("client_id") == undefined || sessionStorage.getItem("client_secret") == undefined ||
+        //     sessionStorage.getItem("access_token") == undefined || sessionStorage.getItem("refresh_token") == undefined){
+        // sessionStorage.setItem("client_id", this.state.client_id);
+        // sessionStorage.setItem("client_secret", this.state.client_secret);
+        // let url = SpotifyInfo.authorize;
+        // url += "?client_id="+ this.state.client_id;
+        // url += "&response_type=code";
+        // url += "&redirect_uri=" + encodeURI(SpotifyInfo.redirect_uri);
+        // url += "&show_dialog=true";
+        // url += "&scope=user-read-private user-read-email";
+        // window.location.href = url;
+        // }
         // axios.get('http://localhost:5000/testAPI',{
         //   data: "hi",
         //   headers: {

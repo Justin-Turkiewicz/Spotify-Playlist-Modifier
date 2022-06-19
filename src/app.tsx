@@ -74,6 +74,9 @@ class App extends React.Component {
           }
           document.getElementById("loginRow")?.remove();
       }
+      else if( xhr.status == 401){
+        this.refreshAcessToken();
+      }
       else {
         console.log(xhr.responseText);
         alert(xhr.responseText);
@@ -83,8 +86,12 @@ class App extends React.Component {
     console.log(this.xhr.readyState);
     }
 }
-  refreshPlaylists(){
-
+  refreshAcessToken() {
+    let refresh_token = localStorage.getItem("refresh_token");
+    let body = "grant_type=refresh_token";
+    body += "&refresh_token=" + refresh_token;
+    body += "&client_id=" + this.client_id;
+    this.callAuthorizationApi(body);
   }
   render() {
     return (
