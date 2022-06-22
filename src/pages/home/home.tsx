@@ -17,31 +17,23 @@ constructor(props: any){
     this.client_id = "";
     this.client_secret ="";
     // this.loginSpot = new LoginSpot(props, "", "");
-{  
+ 
         // console.log(sessionStorage.getItem("client_id"))
         if(sessionStorage.getItem("client_id") != undefined && sessionStorage.getItem("client_secret") != undefined){
-            this.pageLoaded().then(() => {
-                if(sessionStorage.getItem("access_token") != undefined && sessionStorage.getItem("refresh_token") != undefined){
+                this.pageLoaded();
                 this.state = {
                     displayPlaylist: true
                 };
-                }
-            });
         }
         else{
         this.state = {
             displayPlaylist: false
         };
         }
-        console.log(sessionStorage.getItem("client_id"));
-        console.log(sessionStorage.getItem("client_secret"));
-        console.log(sessionStorage.getItem("access_token"));
-        console.log(sessionStorage.getItem("refresh_token"));
-        console.log("Constructor: "+ this.state.displayPlaylist);
-}}
+}
 
 
-async pageLoaded(){
+pageLoaded(){
   // Query String exists
   if(window.location.search.length > 0){
     this.handleRedirect();
@@ -123,6 +115,9 @@ refreshAcessToken() {
   this.callAuthorizationApi(body);
 }
 componentDidMount(){
+    this.checkToRemoveLoginRow();
+}
+checkToRemoveLoginRow = () =>{
     if(this.state.displayPlaylist){
         document.getElementById("loginRow")?.remove();
     }
@@ -163,7 +158,7 @@ render()  {
         <React.Fragment>
         <div id="topBackground">
             <div className="container" id="homeContainer">
-                <Navbar />
+                {/* <Navbar /> */}
                 <div className="row justify-content-center" id="secondRow">
                     <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="title">
                         <h1>ClassifyTheSpot</h1>
@@ -179,6 +174,11 @@ render()  {
                 }
 
                 {this.state.displayPlaylist && (<PlayListComponent client_id={this.client_id} client_secret={this.client_secret}/>) }
+
+                <div id="playlistScaleSpacer">
+                </div>
+                
+                {this.state.displayPlaylist && (<ScaleComponent />)}
             </div>
         </div>
         </React.Fragment>

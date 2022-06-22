@@ -2,6 +2,7 @@ import React from "react";
 import { Component, ReactNode } from "react";
 import { SpotifyInfo } from "../../../constants/spotify_info";
 import { addPlaylist, callApi, removeAllItems } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
+import "./playlistComponent.scss";
 interface loginProps{
     client_id: string;
     client_secret: string;
@@ -60,9 +61,9 @@ export class PlayListComponent extends Component<loginProps>{
     render(){
         return(
             <div className="row" id="playlistRow">
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="spotPlaylist">
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex flex-column justify-content-center" id="spotPlaylist">
                 <select id="playlists" className="form-control"></select>
-                <input className="btn btn-primary btn-sm mt-3" type="button" onClick={() => this.refreshPlaylists()} value="Refresh Playlists"></input>
+                <input className="btn btn-primary btn-sm mt-3" id="retrievePlaylistButton" type="button" onClick={() => this.refreshPlaylists()} value="Retrieve Playlists"></input>
                 </div>
         </div>
         );

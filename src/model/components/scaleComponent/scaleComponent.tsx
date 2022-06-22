@@ -1,6 +1,6 @@
 import React from "react";
 import { Component } from "react";
-
+import './scaleComponent.scss';
 export class ScaleComponent extends Component{
 
     render(){

@@ -1,0 +1,15 @@
+#scaleRow{
+    display: flex;
+    flex-direction: column;
+}
+#scaleRow > *{
+    width: 5rem;
+    background-color: purple;
+    color: white;
+}
+#scaleRow > *:hover {
+    border-color: white;
+}   
+#scaleRow input:nth-child(n+2):nth-child(-n+6){
+    margin-top: 0.75rem;
+}
