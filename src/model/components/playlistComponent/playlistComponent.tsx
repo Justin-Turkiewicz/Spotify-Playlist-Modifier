@@ -1,7 +1,7 @@
 import React from "react";
 import { Component, ReactNode } from "react";
 import { SpotifyInfo } from "../../../constants/spotify_info";
-import { addPlaylist, callApi, removeAllItems } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
+import { addPlaylist, callApi, refreshAcessToken, removeAllItems } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
 import "./playlistComponent.scss";
 interface loginProps{
     client_id: string;
@@ -56,6 +56,10 @@ export class PlayListComponent extends Component<loginProps>{
             removeAllItems("playlists");
             data.items.forEach((item: any) => addPlaylist(item));
             (document.getElementById('playlists')! as HTMLSelectElement).value=this.currentPlaylist;
+        }
+        else if(this.xhr.status == 401){
+          console.log(this.xhr.status);
+          refreshAcessToken(this.state.client_id, this.refreshPlaylists());
         }
     }
     render(){

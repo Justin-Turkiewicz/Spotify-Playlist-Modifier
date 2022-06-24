@@ -12,7 +12,7 @@ export class CardComponent extends Component<cardProps>{
         let trackCards = [];
         for(let i = 0;i<10;i++) {
             let idName = "trackCard"+i
-            trackCards.push(<div id={idName} ></div>);
+            trackCards.push(<div id={idName} key={i}></div>);
         }
     return <div id="listOfTrackCards">{trackCards}</div>;
 }

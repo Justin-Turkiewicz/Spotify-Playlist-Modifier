@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SpotifyInfo } from '../../constants/spotify_info';
 import { PlayListComponent } from '../../model/components/playlistComponent/playlistComponent';
 import { ScaleComponent } from '../../model/components/scaleComponent/scaleComponent';
-import Navbar from '../navbar/navbar';
+import { callAuthorizationApi, refreshAcessToken } from '../../packages/spotifyAPICalls/spotifyAPICalls';
 import './home.scss';
 
 export class Home extends React.Component{
@@ -67,53 +67,19 @@ fetchAccessToken(code: String){
   this.body += "&redirect_uri="+encodeURI(SpotifyInfo.redirect_uri);
   this.body += "&client_id="+this.client_id;
   this.body += "&client_secret="+this.client_secret;
-  this.callAuthorizationApi(this.body);
+  callAuthorizationApi(this.client_id, this.body, false);
 }
 
-callAuthorizationApi(body: String){
-  this.xhr.open("POST", SpotifyInfo.token, true);
-  this.xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  this.xhr.setRequestHeader('Authorization', 'Basic '+ btoa(this.client_id + ":"+ this.client_secret));
-  this.xhr.send(this.body);
-  this.xhr.onload = () => {this.handleAuthorizationResponse(this.xhr);}
-}
 
-handleAuthorizationResponse(xhr: XMLHttpRequest){
-  console.log(xhr);
-  if(xhr.readyState == 4){
-    if ( xhr.status == 200 ){
-        var data = JSON.parse(xhr.responseText);
-        console.log(data);
-        var data = JSON.parse(xhr.responseText);
-        if ( data.access_token != undefined ){
-            let access_token = data.access_token;
-            sessionStorage.setItem("access_token", access_token);
-        }
-        if ( data.refresh_token  != undefined ){
-            let refresh_token = data.refresh_token;
-            sessionStorage.setItem("refresh_token", refresh_token);
-        }
-        document.getElementById("loginRow")?.remove();
-    }
-    else if( xhr.status == 401){
-      this.refreshAcessToken();
-    }
-    else {
-      console.log(xhr.responseText);
-      alert(xhr.responseText);
-  }
-  }
-else{
-  console.log(this.xhr.readyState);
-  }
-}
-refreshAcessToken() {
-  let refresh_token = localStorage.getItem("refresh_token");
-  let body = "grant_type=refresh_token";
-  body += "&refresh_token=" + refresh_token;
-  body += "&client_id=" + this.client_id;
-  this.callAuthorizationApi(body);
-}
+
+
+// refreshAcessToken() {
+//   let refresh_token = localStorage.getItem("refresh_token");
+//   let body = "grant_type=refresh_token";
+//   body += "&refresh_token=" + refresh_token;
+//   body += "&client_id=" + this.client_id;
+//   this.callAuthorizationApi(body);
+// }
 componentDidMount(){
     this.checkToRemoveLoginRow();
 }
