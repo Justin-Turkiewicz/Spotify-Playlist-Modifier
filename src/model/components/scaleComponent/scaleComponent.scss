@@ -1,15 +1,33 @@
+#parentFlex{
+    display: flex;
+    flex-direction: row;
+    height: 70rem;
+}
 #scaleRow{
     display: flex;
     flex-direction: column;
+    flex-basis: 50%;
 }
-#scaleRow > *{
-    width: 5rem;
+#scaleRow > *, #tracks > input{
+    width: 7.5rem;
     background-color: purple;
     color: white;
 }
 #scaleRow > *:hover {
     border-color: white;
 }   
-#scaleRow input:nth-child(n+2):nth-child(-n+6){
-    margin-top: 0.75rem;
+#scaleRow input:nth-child(n+2):nth-child(-n+7){
+    margin-top: 1rem;
+}
+#tracks{
+    display: flex;
+    flex-direction: column;
+    flex-basis: 50%;
+    // justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+#tracks > input{
+    width: 15rem;
+    margin:0px auto;
 }
