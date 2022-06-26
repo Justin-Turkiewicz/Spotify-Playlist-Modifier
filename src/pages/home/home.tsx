@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { SpotifyInfo } from '../../constants/spotify_info';
 import { PlayListComponent } from '../../model/components/playlistComponent/playlistComponent';
-import { ScaleComponent } from '../../model/components/scaleComponent/scaleComponent';
 import { callAuthorizationApi, refreshAcessToken } from '../../packages/spotifyAPICalls/spotifyAPICalls';
 import './home.scss';
 
@@ -101,7 +100,7 @@ addSpot = (client_id: string, client_secret: string) => {
         url += "&response_type=code";
         url += "&redirect_uri=" + encodeURI(SpotifyInfo.redirect_uri);
         url += "&show_dialog=true";
-        url += "&scope=user-read-private user-read-email";
+        url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state user-read-recently-played playlist-read-private playlist-modify-private playlist-modify-public";
         window.location.href = url;
         }
         if(sessionStorage.getItem("client_id") != undefined && sessionStorage.getItem("client_secret") != undefined
@@ -144,7 +143,7 @@ render()  {
                 <div id="playlistScaleSpacer">
                 </div>
                 
-                {this.state.displayPlaylist && (<ScaleComponent />)}
+                {/* {this.state.displayPlaylist && (<ScaleComponent />)} */}
             </div>
         </div>
         </React.Fragment>

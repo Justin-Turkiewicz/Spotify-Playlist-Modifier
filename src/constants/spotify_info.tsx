@@ -4,5 +4,6 @@ export class SpotifyInfo{
     static readonly redirect_uri = 'http://localhost:3000'; // your redirect uri
     static readonly authorize = 'https://accounts.spotify.com/authorize';
     static readonly token = 'https://accounts.spotify.com/api/token';
-    static readonly playlists_url = 'https://api.spotify.com/v1/me/playlists'
+    static readonly playlists_url = 'https://api.spotify.com/v1/me/playlists';
+    static readonly tracks_url = "https://api.spotify.com/v1/playlists/{{PlaylistId}}/tracks";
 }

@@ -1,7 +1,8 @@
 import React from "react";
 import { Component, ReactNode } from "react";
 import { SpotifyInfo } from "../../../constants/spotify_info";
-import { addPlaylist, callApi, refreshAcessToken, removeAllItems } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
+import { addPlaylist, addTrack, callApi, refreshAcessToken, removeAllItems } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
+import { ScaleComponent } from "../scaleComponent/scaleComponent";
 import "./playlistComponent.scss";
 interface loginProps{
     client_id: string;
@@ -11,12 +12,16 @@ export class PlayListComponent extends Component<loginProps>{
     xhr = new XMLHttpRequest();
     currentPlaylist = "";
     state: any;
+    unique_uri: string;
+
     constructor(props: loginProps){
       super(props);
       this.state = {
         client_id: props.client_id,
-        client_secret: props.client_secret
+        client_secret: props.client_secret,
+        playlistSelected: false
       };  
+      this.unique_uri = "";
     }
     componentDidMount = () => {
         // if(sessionStorage.getItem("client_id") == undefined || sessionStorage.getItem("client_secret") == undefined ||
@@ -46,35 +51,64 @@ export class PlayListComponent extends Component<loginProps>{
         // }
         // )
       }
-    refreshPlaylists(){
-        this.xhr = callApi("GET", SpotifyInfo.playlists_url, null, this.handlePlaylistsResponse(), sessionStorage.getItem("access_token"))
+    async refreshPlaylists(){
+        callApi("GET", SpotifyInfo.playlists_url, null, sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
+          (data) =>
+        {
+          this.handlePlaylistsResponse(data);
+        });
     }
-    handlePlaylistsResponse(){
-        if(this.xhr.readyState == 4 && this.xhr.status == 200){
-            var data = JSON.parse(this.xhr.responseText);
-            console.log(data);
-            removeAllItems("playlists");
-            data.items.forEach((item: any) => addPlaylist(item));
-            (document.getElementById('playlists')! as HTMLSelectElement).value=this.currentPlaylist;
+    handlePlaylistsResponse(data: any){
+        console.log(data);
+        console.log(data.items);
+        removeAllItems("playlists");
+        data.items.forEach((item: any) => addPlaylist(item));
+        (document.getElementById('playlists')! as HTMLSelectElement).value=this.currentPlaylist;
         }
-        else if(this.xhr.status == 401){
-          console.log(this.xhr.status);
-          refreshAcessToken(this.state.client_id, this.refreshPlaylists());
-        }
-    }
+    
     render(){
         return(
-            <div className="row" id="playlistRow">
+          <div className="row" id="playlistRow">
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex flex-column justify-content-center" id="spotPlaylist">
-                <select id="playlists" className="form-control"></select>
+                <select id="playlists" className="form-control" onChange={(event) => this.selectedPlaylistChange(event)}></select>
                 <input className="btn btn-primary btn-sm mt-3" id="retrievePlaylistButton" type="button" onClick={() => this.refreshPlaylists()} value="Retrieve Playlists"></input>
-                </div>
-        </div>
+                <input className="btn btn-primary btn-sm mt-3" id="retrievePlaylistButton" type="button" onClick={() => this.selectedPlaylistChangeButton()} value="Retrieve Tracks"></input>
+                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true"/> }
+                {/*or. || doesn't work :( */} 
+                {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false"/>}
+            </div>
+          </div>
         );
         
     }
-    fetchPlaylist(): void {
-        throw new Error("Method not implemented.");
+  selectedPlaylistChangeButton() {
+    this.fetchTracks("1ZviOgEj0Qjf88MlrpWqpq");
+  }
+    selectedPlaylistChange = (event: any) => {
+      // this.setState({
+      //   unique_uri: event.target.value,
+      //   playlistSelected: true}, () => {
+        console.log(event.target.value);
+          this.fetchTracks(event.target.value);
+        // });
     }
-}
+    fetchTracks(playlistID: string){
+      console.log(playlistID);
+      let url = SpotifyInfo.tracks_url;
+      url = url.replace("{{PlaylistId}}", playlistID);
+      console.log(url);
+      callApi("GET", url, null, sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
+        (data) => {
+        this.handleTracksResponse(data);
+      });
+      // console.log(this.xhr);
+    }
+    handleTracksResponse(data: any){
+        console.log(data);
+        console.log(data.items);
+        removeAllItems("tracks");
+        data.items.forEach( (item: any, index: any) => addTrack(item, index));
+    }
+    }
+
 

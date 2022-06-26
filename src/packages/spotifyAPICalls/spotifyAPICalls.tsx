@@ -1,13 +1,24 @@
 import { SpotifyInfo } from "../../constants/spotify_info";
 
-export function callApi(method: any, url: any, body: any, callback: any, access_token: any){
-    let xhr = new XMLHttpRequest();
+export function callApi(method: any, url: any, body: any, client_id: any, access_token: any){
+    return new Promise( (resolve, reject) => {
+      let xhr = new XMLHttpRequest();
+      xhr.addEventListener("readystatechange", () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          let data = JSON.parse(xhr.responseText);
+          resolve(data);
+        } else if (xhr.status == 401) {
+          // need to test
+          refreshAcessToken(client_id);
+          callApi(method, url, body, client_id, sessionStorage.getItem("access_token"));
+          reject("API call failed");
+        }
+      });
     xhr.open(method, url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'Bearer '+ access_token);
     xhr.send(body);
-    xhr.onload = callback;
-    return xhr;
+});
 }
 export function removeAllItems(elementId: string){
     let node = document.getElementById(elementId);
@@ -22,15 +33,12 @@ export function addPlaylist(item: any){
     document.getElementById("playlists")?.appendChild(node);
 }
 
-export function refreshAcessToken(client_id: string, callback?: any){
+export function refreshAcessToken(client_id: string){
     let refresh_token = sessionStorage.getItem("refresh_token");
     let body = "grant_type=refresh_token";
     body += "&refresh_token=" + refresh_token;
     body += "&client_id=" + client_id;
     callAuthorizationApi(client_id, body, true);
-    if(callback != undefined){
-    callback();
-    }
 }
 
 export function callAuthorizationApi(client_id: string, body: string, refreshing: boolean){
@@ -43,7 +51,7 @@ export function callAuthorizationApi(client_id: string, body: string, refreshing
   xhr.onload = () => {handleAuthorizationResponse(xhr, body, refreshing);}
 }
 
-export function handleAuthorizationResponse(xhr: XMLHttpRequest, body: string, refreshing: boolean){
+export function handleAuthorizationResponse(xhr: XMLHttpRequest, body: string, refreshing: boolean, callback?: any){
     console.log(xhr);
     if(xhr.readyState == 4){
       if ( xhr.status == 200 ){
@@ -59,10 +67,11 @@ export function handleAuthorizationResponse(xhr: XMLHttpRequest, body: string, r
               sessionStorage.setItem("refresh_token", refresh_token);
           }
           document.getElementById("loginRow")?.remove();
+          callback!;
       }
       else if( xhr.status == 401 && !refreshing){
         let client_id = sessionStorage.getItem("client_id");
-        if(client_id != null){
+        if(!refreshing && client_id != null){
         refreshAcessToken(client_id);
         }else{
             console.log("client_id is null");
@@ -77,6 +86,12 @@ export function handleAuthorizationResponse(xhr: XMLHttpRequest, body: string, r
     console.log(xhr.readyState);
     }
   }
+export function addTrack(item: any, index: any){
+    let node = document.createElement("option");
+    node.value = index;
+    node.innerHTML = item.track.name + " (" + item.track.artists[0].name + ")";
+    document.getElementById("tracks")!.appendChild(node); 
+}
 // refreshAcessToken() {
 //     let refresh_token = localStorage.getItem("refresh_token");
 //     let body = "grant_type=refresh_token";

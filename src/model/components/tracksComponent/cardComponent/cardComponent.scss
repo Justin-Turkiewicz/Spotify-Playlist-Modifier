@@ -8,4 +8,19 @@
     border-style: solid;
     border-color: white;
     border-width: 0.05rem;
+
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+}
+.songNames, .songNumbers{
+    color: white;
+}
+.songNames{
+    flex-basis: 90%;
+    margin-left: 0.5rem;
+}
+.songNumbers{
+    flex-basis: 10%;
+    margin-right: 0.5rem;
 }
