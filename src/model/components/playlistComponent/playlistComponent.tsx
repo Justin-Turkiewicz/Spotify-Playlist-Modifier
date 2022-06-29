@@ -13,6 +13,7 @@ export class PlayListComponent extends Component<loginProps>{
     currentPlaylist = "";
     state: any;
     unique_uri: string;
+    songDict: {[id: string]: string} = {};
 
     constructor(props: loginProps){
       super(props);
@@ -52,7 +53,8 @@ export class PlayListComponent extends Component<loginProps>{
         // )
       }
     async refreshPlaylists(){
-        callApi("GET", SpotifyInfo.playlists_url, null, sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
+      /// TODO: increase offset if user has more than 50 playlists
+        callApi("GET", SpotifyInfo.playlists_url+"?limit=50", null, sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
           (data) =>
         {
           this.handlePlaylistsResponse(data);
@@ -67,13 +69,13 @@ export class PlayListComponent extends Component<loginProps>{
         }
     
     render(){
+      let cardToBeDisplayedComponent = <ScaleComponent displayTrackComponent="true"/>;
         return(
           <div className="row" id="playlistRow">
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex flex-column justify-content-center" id="spotPlaylist">
                 <select id="playlists" className="form-control" onChange={(event) => this.selectedPlaylistChange(event)}></select>
                 <input className="btn btn-primary btn-sm mt-3" id="retrievePlaylistButton" type="button" onClick={() => this.refreshPlaylists()} value="Retrieve Playlists"></input>
-                <input className="btn btn-primary btn-sm mt-3" id="retrievePlaylistButton" type="button" onClick={() => this.selectedPlaylistChangeButton()} value="Retrieve Tracks"></input>
-                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true"/> }
+                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.songDict}/> }
                 {/*or. || doesn't work :( */} 
                 {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false"/>}
             </div>
@@ -81,15 +83,13 @@ export class PlayListComponent extends Component<loginProps>{
         );
         
     }
-  selectedPlaylistChangeButton() {
-    this.fetchTracks("1ZviOgEj0Qjf88MlrpWqpq");
-  }
     selectedPlaylistChange = (event: any) => {
       // this.setState({
       //   unique_uri: event.target.value,
       //   playlistSelected: true}, () => {
         console.log(event.target.value);
-          this.fetchTracks(event.target.value);
+        this.fetchTracks(event.target.value);
+
         // });
     }
     fetchTracks(playlistID: string){
@@ -106,8 +106,13 @@ export class PlayListComponent extends Component<loginProps>{
     handleTracksResponse(data: any){
         console.log(data);
         console.log(data.items);
-        removeAllItems("tracks");
-        data.items.forEach( (item: any, index: any) => addTrack(item, index));
+        // removeAllItems("tracks");
+        this.songDict = {};
+        data.items.forEach( (item: any, index: any) => addTrack(item, index, this.songDict));
+        // console.log(this.songDict);
+        this.setState({playlistSelected: true},
+           () => {
+           });
     }
     }
 

@@ -1,29 +1,41 @@
 import React, { Component, ReactNode } from "react";
 import "./cardComponent.scss";
-interface cardProps{
-    numOfCards: number;
+interface CardProps{
+    tracks?: {[id: string]: string};
 }
-export class CardComponent extends Component<cardProps>{
+interface CardState{
+    songDict: {[id: string]: string}
+}
+export class CardComponent extends Component<CardProps, CardState>{
     songName = "Track 1";
     songNumber = "1";
-    constructor(props: cardProps){
+
+    constructor(props: CardProps){
         super(props);
+        this.state = {
+            songDict: props.tracks!
+        }
     }
-    createTracksOnPage(props: any){
+    static getDerivedStateFromProps(props: CardProps, state: CardState){
+        return {songDict: props.tracks!};
+    }
+    createTracksOnPage(){
         let trackCards = [];
-        for(let i = 0;i<10;i++) {
+        for(let i = 0;i<Object.keys(this.state.songDict).length;i++) {
             let idName = "trackCard"+i
+            console.log(this.state.songDict[i]);
             trackCards.push(<div id={idName} key={i}>
-                <div className="songNames">{this.songName}</div>
-                <div className="songNumbers">{this.songNumber}</div>
+                <div className="songNames">{this.state.songDict[i]}</div>
+                {/* <div className="songNumbers">{this.songNumber}</div> */}
             </div>);
         }
+    console.log(trackCards);
     return <div id="listOfTrackCards">{trackCards}</div>;
 }
     render(): ReactNode {
         return(
             <React.Fragment>
-                {this.createTracksOnPage(this.props.numOfCards)}
+                {this.createTracksOnPage()}
             </React.Fragment>
         );
     }

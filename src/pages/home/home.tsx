@@ -109,7 +109,7 @@ addSpot = (client_id: string, client_secret: string) => {
                     displayPlaylist: true
                 };
         }
-        console.log("SetState: "+this.state.displayPlaylist);
+        // console.log("SetState: "+this.state.displayPlaylist);
 
 
         // console.log("State login: "+this.state.displayPlaylist);

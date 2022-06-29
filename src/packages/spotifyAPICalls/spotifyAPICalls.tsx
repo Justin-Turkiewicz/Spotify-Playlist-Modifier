@@ -86,11 +86,13 @@ export function handleAuthorizationResponse(xhr: XMLHttpRequest, body: string, r
     console.log(xhr.readyState);
     }
   }
-export function addTrack(item: any, index: any){
-    let node = document.createElement("option");
-    node.value = index;
-    node.innerHTML = item.track.name + " (" + item.track.artists[0].name + ")";
-    document.getElementById("tracks")!.appendChild(node); 
+export function addTrack(item: any, index: any, songDict: {[id: string]: string;}){
+    // let node = document.createElement("option");
+    // node.value = index;
+    // node.innerHTML = item.track.name + " (" + item.track.artists[0].name + ")";
+    // document.getElementById("trackss")!.appendChild(node); 
+    songDict[index] = item.track.name;
+    return songDict;
 }
 // refreshAcessToken() {
 //     let refresh_token = localStorage.getItem("refresh_token");

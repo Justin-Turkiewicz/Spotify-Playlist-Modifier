@@ -2,23 +2,31 @@ import React from "react";
 import { Component } from "react";
 import { TracksComponent } from "../tracksComponent/tracksComponent";
 import './scaleComponent.scss';
-interface scaleProps{
+interface ScaleProps{
     displayTrackComponent: string
+    tracks?: {[id: string]: string}
 }
 interface scaleStates{
     displayTrackComponent: string
+    songDict: {[id: string]: string}
 }
-export class ScaleComponent extends Component<scaleProps, scaleStates>{
-    constructor(props: scaleProps){
+export class ScaleComponent extends Component<ScaleProps, scaleStates>{
+
+    constructor(props: ScaleProps){
         super(props);
+        console.log(props.displayTrackComponent);
         this.state = {
-            displayTrackComponent: props.displayTrackComponent
+            displayTrackComponent: props.displayTrackComponent,
+            songDict: props.tracks!
         }
+
     }
-    getTracksFromSelectedPlaylist(){
-    }
+    static getDerivedStateFromProps(props: ScaleProps, state: scaleStates){
+        return {songDict: props.tracks!}
+    }  
     render(){
         let toDisplayTackComponent = (this.state.displayTrackComponent === "true");
+        // console.log(this.state.songDict);
         return(
             <React.Fragment>
                 <div id="parentFlex">
@@ -32,8 +40,7 @@ export class ScaleComponent extends Component<scaleProps, scaleStates>{
                         <input type="button" value="Create Playlists"></input>
                     </div>
                     <div id="tracks">
-                        <input id="getTracksFromSelectedPlaylistButton" type="button" value="Get tracks from selected playlist" onClick={() => this.getTracksFromSelectedPlaylist()}></input>
-                        {toDisplayTackComponent && <TracksComponent />}
+                        {toDisplayTackComponent && <TracksComponent tracks={this.state.songDict}/>}
                     </div>
                 </div>
             </React.Fragment>
