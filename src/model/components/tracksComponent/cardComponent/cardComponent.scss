@@ -13,6 +13,13 @@
     flex-grow: 1;
     align-items: center;
 }
+#listOfTrackCards > [id^="trackCard"].unselected:hover{
+    background-color: orange;
+}
+
+#listOfTrackCards > [id^="trackCard"].selected{
+    background-color: orange;
+}
 .songNames, .songNumbers{
     color: white;
 }
