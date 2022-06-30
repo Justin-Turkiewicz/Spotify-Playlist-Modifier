@@ -4,25 +4,16 @@ import './tracksComponent.scss';
 interface TrackProps{
     tracks?: {[id: string]: string}
 }
-interface TrackState{
-    songDict: {[id: string]: string};
-}
-export class TracksComponent extends Component<TrackProps, TrackState>{
+export class TracksComponent extends Component<TrackProps>{
 
     constructor(props: TrackProps){
         super(props);
-        this.state = { 
-           songDict: props.tracks!
-        }
-    }
-    static getDerivedStateFromProps(props: TrackProps, state: TrackState){
-        return {songDict: props.tracks!};
     }
     render(): ReactNode {
         return(
             <React.Fragment>
                 <div id="tracksArray">
-                    {<CardComponent tracks={this.state.songDict}/>}
+                    {<CardComponent tracks={this.props.tracks!}/>}
                 </div>
 
             </React.Fragment>

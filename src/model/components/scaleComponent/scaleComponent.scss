@@ -1,3 +1,6 @@
+#RefreshPlaylistAndParentFlexSpacer{
+    height: 1rem;
+}
 #parentFlex{
     display: flex;
     flex-direction: row;
@@ -8,12 +11,12 @@
     flex-direction: column;
     flex-basis: 50%;
 }
-#scaleRow > *, #tracks > input{
+#scaleRow > *, #tracks > input, #trackButtonFlex > input{
     width: 7.5rem;
     background-color: purple;
     color: white;
 }
-#scaleRow > *:hover {
+#scaleRow > *:hover{
     border-color: white;
 }   
 #scaleRow input:nth-child(n+2):nth-child(-n+7){
@@ -32,5 +35,17 @@
     margin:0px auto;
 }
 #getTracksFromSelectedPlaylistButton:hover{
+    border-color: white;
+}
+#trackButtonFlex {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    width: 100%;
+}
+#trackButtonFlex > input{
+    flex-basis: 25%;
+}
+#trackButtonFlex > input:hover{
     border-color: white;
 }

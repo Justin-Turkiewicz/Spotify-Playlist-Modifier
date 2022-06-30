@@ -101,3 +101,28 @@ export function addTrack(item: any, index: any, songDict: {[id: string]: string;
 //     body += "&client_id=" + client_id;
 //     callAuthorizationApi(body);
 //   }
+export function fetchTracks(playlistID: string, offset: number, callback: any){
+  console.log(playlistID);
+  let url = SpotifyInfo.tracks_url;
+  url = url.replace("{{PlaylistId}}", playlistID);
+  if(offset != 0){
+    url += "?=offset="+offset;
+  }
+  console.log(url);
+  callApi("GET", url, null, sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
+    (data) => {
+    handleTracksResponse(data, playlistID, callback);
+  });
+  // console.log(this.xhr);
+}
+export function handleTracksResponse(data: any, playlistID: string, callback: any){
+    // console.log(data);
+    // console.log(data.items);
+    // removeAllItems("tracks");
+    let songDict = {};
+    data.items.forEach( (item: any, index: any) => addTrack(item, index, songDict));
+    console.log(songDict);
+    // console.log(this.songDict);
+    callback(playlistID,songDict);
+
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import { Component, ReactNode } from "react";
 import { SpotifyInfo } from "../../../constants/spotify_info";
-import { addPlaylist, addTrack, callApi, refreshAcessToken, removeAllItems } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
+import { addPlaylist, addTrack, callApi, fetchTracks, refreshAcessToken, removeAllItems } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
 import { ScaleComponent } from "../scaleComponent/scaleComponent";
 import "./playlistComponent.scss";
 interface loginProps{
@@ -18,9 +18,8 @@ export class PlayListComponent extends Component<loginProps>{
     constructor(props: loginProps){
       super(props);
       this.state = {
-        client_id: props.client_id,
-        client_secret: props.client_secret,
-        playlistSelected: false
+        playlistSelected: false,
+        playlistID: ""
       };  
       this.unique_uri = "";
     }
@@ -61,21 +60,21 @@ export class PlayListComponent extends Component<loginProps>{
         });
     }
     handlePlaylistsResponse(data: any){
-        console.log(data);
-        console.log(data.items);
+        // console.log(data);
+        // console.log(data.items);
         removeAllItems("playlists");
         data.items.forEach((item: any) => addPlaylist(item));
         (document.getElementById('playlists')! as HTMLSelectElement).value=this.currentPlaylist;
         }
     
     render(){
-      let cardToBeDisplayedComponent = <ScaleComponent displayTrackComponent="true"/>;
+
         return(
           <div className="row" id="playlistRow">
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex flex-column justify-content-center" id="spotPlaylist">
                 <select id="playlists" className="form-control" onChange={(event) => this.selectedPlaylistChange(event)}></select>
                 <input className="btn btn-primary btn-sm mt-3" id="retrievePlaylistButton" type="button" onClick={() => this.refreshPlaylists()} value="Retrieve Playlists"></input>
-                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.songDict}/> }
+                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.songDict} playlistID={this.state.playlistID}/> }
                 {/*or. || doesn't work :( */} 
                 {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false"/>}
             </div>
@@ -88,32 +87,43 @@ export class PlayListComponent extends Component<loginProps>{
       //   unique_uri: event.target.value,
       //   playlistSelected: true}, () => {
         console.log(event.target.value);
-        this.fetchTracks(event.target.value);
+        fetchTracks(event.target.value, 0, this.updatePlaylistStateAfterAddingTracks.bind(this));
 
         // });
     }
-    fetchTracks(playlistID: string){
-      console.log(playlistID);
-      let url = SpotifyInfo.tracks_url;
-      url = url.replace("{{PlaylistId}}", playlistID);
-      console.log(url);
-      callApi("GET", url, null, sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
-        (data) => {
-        this.handleTracksResponse(data);
-      });
-      // console.log(this.xhr);
+    updatePlaylistStateAfterAddingTracks(playlistID?: string, songDict?: {[id: string]: string}){
+      // console.log(songDict);
+      // console.log(playlistID);
+      this.songDict = songDict!;
+
+      this.setState({playlistSelected: true,
+        playlistID: playlistID},
+       () => {
+       });
     }
-    handleTracksResponse(data: any){
-        console.log(data);
-        console.log(data.items);
-        // removeAllItems("tracks");
-        this.songDict = {};
-        data.items.forEach( (item: any, index: any) => addTrack(item, index, this.songDict));
-        // console.log(this.songDict);
-        this.setState({playlistSelected: true},
-           () => {
-           });
-    }
+    // fetchTracks(playlistID: string){
+    //   console.log(playlistID);
+    //   let url = SpotifyInfo.tracks_url;
+    //   url = url.replace("{{PlaylistId}}", playlistID);
+    //   console.log(url);
+    //   callApi("GET", url, null, sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
+    //     (data) => {
+    //     this.handleTracksResponse(data, playlistID);
+    //   });
+    //   // console.log(this.xhr);
+    // }
+    // handleTracksResponse(data: any, playlistID: string){
+    //     console.log(data);
+    //     console.log(data.items);
+    //     // removeAllItems("tracks");
+    //     this.songDict = {};
+    //     data.items.forEach( (item: any, index: any) => addTrack(item, index, this.songDict));
+    //     // console.log(this.songDict);
+    //     this.setState({playlistSelected: true,
+    //         playlistID: playlistID},
+    //        () => {
+    //        });
+    // }
     }
 
 
