@@ -1,8 +1,9 @@
 import React, { Component, ReactNode } from 'react';
+import { SongDictionary } from '../../songDictionary/songDictionary';
 import { CardComponent } from './cardComponent/cardComponent';
 import './tracksComponent.scss';
 interface TrackProps{
-    tracks?: {[id: string]: string}
+    tracks: SongDictionary
 }
 export class TracksComponent extends Component<TrackProps>{
 
@@ -13,7 +14,7 @@ export class TracksComponent extends Component<TrackProps>{
         return(
             <React.Fragment>
                 <div id="tracksArray">
-                    {<CardComponent tracks={this.props.tracks!}/>}
+                    {<CardComponent tracks={this.props.tracks}/>}
                 </div>
 
             </React.Fragment>

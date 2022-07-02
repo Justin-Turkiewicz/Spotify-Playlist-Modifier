@@ -1,4 +1,5 @@
 import { SpotifyInfo } from "../../constants/spotify_info";
+import { SongDictionary } from "../../model/songDictionary/songDictionary";
 
 export function callApi(method: any, url: any, body: any, client_id: any, access_token: any){
     return new Promise( (resolve, reject) => {
@@ -26,11 +27,11 @@ export function removeAllItems(elementId: string){
         node.removeChild(node.firstChild);
     }
 }
-export function addPlaylist(item: any){
+export function addPlaylist(item: any, num: number){
     let node = document.createElement("option");
     node.value = item.id;
     node.innerHTML = item.name + " (" + item.tracks.total + ")";
-    document.getElementById("playlists")?.appendChild(node);
+    document.getElementById("playlists"+num)?.appendChild(node);
 }
 
 export function refreshAcessToken(client_id: string){
@@ -86,12 +87,13 @@ export function handleAuthorizationResponse(xhr: XMLHttpRequest, body: string, r
     console.log(xhr.readyState);
     }
   }
-export function addTrack(item: any, index: any, songDict: {[id: string]: string;}){
+export function addTrack(item: any, index: any, songDict: SongDictionary){
     // let node = document.createElement("option");
     // node.value = index;
     // node.innerHTML = item.track.name + " (" + item.track.artists[0].name + ")";
     // document.getElementById("trackss")!.appendChild(node); 
-    songDict[index] = item.track.name;
+    // console.log(songDict);
+    songDict.dictionary[index] = item.track.name;
     return songDict;
 }
 // refreshAcessToken() {
@@ -101,7 +103,7 @@ export function addTrack(item: any, index: any, songDict: {[id: string]: string;
 //     body += "&client_id=" + client_id;
 //     callAuthorizationApi(body);
 //   }
-export function fetchTracks(playlistID: string, offset: number, callback: any){
+export function fetchTracks(playlistID: string, offset: number, index: number, callback: any){
   console.log(playlistID);
   let url = SpotifyInfo.tracks_url;
   url = url.replace("{{PlaylistId}}", playlistID);
@@ -111,18 +113,18 @@ export function fetchTracks(playlistID: string, offset: number, callback: any){
   console.log(url);
   callApi("GET", url, null, sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
     (data) => {
-    handleTracksResponse(data, playlistID, callback);
+    handleTracksResponse(data, playlistID, index, callback);
   });
   // console.log(this.xhr);
 }
-export function handleTracksResponse(data: any, playlistID: string, callback: any){
+export function handleTracksResponse(data: any, playlistID: string, index: number, callback: any){
     // console.log(data);
     // console.log(data.items);
     // removeAllItems("tracks");
-    let songDict = {};
+    let songDict = new SongDictionary();
     data.items.forEach( (item: any, index: any) => addTrack(item, index, songDict));
     console.log(songDict);
     // console.log(this.songDict);
-    callback(playlistID,songDict);
+    callback(index,songDict,playlistID);
 
 }

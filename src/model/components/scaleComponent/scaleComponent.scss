@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: row;
     height: 70rem;
+    width: 100%;
 }
 #scaleRow{
     display: flex;
@@ -12,7 +13,7 @@
     flex-basis: 50%;
 }
 #scaleRow > *, #tracks > input, #trackButtonFlex > input{
-    width: 7.5rem;
+    width: 10rem;
     background-color: purple;
     color: white;
 }

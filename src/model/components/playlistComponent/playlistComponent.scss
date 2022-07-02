@@ -6,3 +6,26 @@
 #retrievePlaylistButton:hover{
     border-color: white;
 }
+#spotPlaylist{
+    display: flex;
+    flex-direction: row;
+}
+[id^="playlistAndRefreshButton"]{
+    display: flex;
+    flex-direction: column;
+    width: 22rem;
+}
+[id^="playlists"]{
+    width: 100%;
+}
+[id^="retrievePlaylistButton"]{
+    background-color: purple;
+    color: white;
+    border-radius: 15%;
+    border-style: none;
+    width: 10em;
+    padding: 0.5em;
+    margin-top: 1rem;
+    margin-right: 1rem;
+    align-self: center;
+  }

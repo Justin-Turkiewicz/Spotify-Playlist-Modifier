@@ -1,7 +1,8 @@
 import React, { Component, ReactNode } from "react";
+import { SongDictionary } from "../../../songDictionary/songDictionary";
 import "./cardComponent.scss";
 interface CardProps{
-    tracks?: {[id: string]: string};
+    tracks: SongDictionary;
 }
 export class CardComponent extends Component<CardProps>{
     songName = "Track 1";
@@ -24,13 +25,19 @@ export class CardComponent extends Component<CardProps>{
 
        }
     }
+    songDictionaryDefined(){
+        return this.props.tracks! != undefined;
+    }
+    songDictionaryDictionaryDefined(){
+        return this.props.tracks.dictionary! != undefined;
+    }
     createTracksOnPage(){
         let trackCards = [];
-        for(let i = 0;i<Object.keys(this.props.tracks!).length;i++) {
+        for(let i = 0;i<Object.keys(this.props.tracks.dictionary).length;i++) {
             let idName = "trackCard"+i
             // console.log(this.state.songDict[i]);
             trackCards.push(<button id={idName} key={i} className="unselected" onClick={() => this.handleClick(idName)}>
-                <label className="songNames">{this.props.tracks![i]}</label>
+                <label className="songNames">{this.props.tracks!.dictionary![i]}</label>
                 {/* <div className="songNumbers">{this.songNumber}</div> */}
             </button>);
         }
@@ -40,7 +47,7 @@ export class CardComponent extends Component<CardProps>{
     render(): ReactNode {
         return(
             <React.Fragment>
-                {this.createTracksOnPage()}
+                {this.songDictionaryDefined() && this.songDictionaryDictionaryDefined() && this.createTracksOnPage()}
             </React.Fragment>
         );
     }

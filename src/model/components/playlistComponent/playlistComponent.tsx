@@ -2,24 +2,29 @@ import React from "react";
 import { Component, ReactNode } from "react";
 import { SpotifyInfo } from "../../../constants/spotify_info";
 import { addPlaylist, addTrack, callApi, fetchTracks, refreshAcessToken, removeAllItems } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
+import { SongDictionary } from "../../songDictionary/songDictionary";
 import { ScaleComponent } from "../scaleComponent/scaleComponent";
 import "./playlistComponent.scss";
 interface loginProps{
     client_id: string;
     client_secret: string;
   }
-export class PlayListComponent extends Component<loginProps>{
+interface loginState{
+  playlistSelected: boolean
+  playlistIDArray: string[]
+}
+export class PlayListComponent extends Component<loginProps, loginState>{
     xhr = new XMLHttpRequest();
     currentPlaylist = "";
     state: any;
     unique_uri: string;
-    songDict: {[id: string]: string} = {};
+    songDictionaryArray: SongDictionary[] = [];
 
     constructor(props: loginProps){
       super(props);
       this.state = {
         playlistSelected: false,
-        playlistID: ""
+        playlistIDArray: []
       };  
       this.unique_uri = "";
     }
@@ -51,53 +56,67 @@ export class PlayListComponent extends Component<loginProps>{
         // }
         // )
       }
-    async refreshPlaylists(){
+    async refreshPlaylists(num: number){
       /// TODO: increase offset if user has more than 50 playlists
         callApi("GET", SpotifyInfo.playlists_url+"?limit=50", null, sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
           (data) =>
         {
-          this.handlePlaylistsResponse(data);
+          this.handlePlaylistsResponse(data, num);
         });
     }
-    handlePlaylistsResponse(data: any){
+    handlePlaylistsResponse(data: any, num: number){
         // console.log(data);
         // console.log(data.items);
         removeAllItems("playlists");
-        data.items.forEach((item: any) => addPlaylist(item));
-        (document.getElementById('playlists')! as HTMLSelectElement).value=this.currentPlaylist;
+        data.items.forEach((item: any) => addPlaylist(item, num));
+        (document.getElementById('playlists'+num)! as HTMLSelectElement).value=this.currentPlaylist;
         }
     
     render(){
 
         return(
           <div className="row" id="playlistRow">
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex flex-column justify-content-center" id="spotPlaylist">
-                <select id="playlists" className="form-control" onChange={(event) => this.selectedPlaylistChange(event)}></select>
-                <input className="btn btn-primary btn-sm mt-3" id="retrievePlaylistButton" type="button" onClick={() => this.refreshPlaylists()} value="Retrieve Playlists"></input>
-                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.songDict} playlistID={this.state.playlistID}/> }
+            <div id="spotPlaylist">
+              <div id="playlistAndRefreshButton1">
+                <select id="playlists1" onChange={(event) => this.selectedPlaylistChange(event, 0)}></select>
+                <input id="retrievePlaylistButton1" type="button" onClick={() => this.refreshPlaylists(1)} value="Retrieve Playlists"></input>
+                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.songDictionaryArray[0]} playlistID={this.state.playlistIDArray[0]} index={0}/> }
                 {/*or. || doesn't work :( */} 
-                {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false"/>}
+                {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false" tracks={new SongDictionary()} index={0}/>}
+              </div>
+              <div id="playlistAndRefreshButton2">
+                <select id="playlists2" onChange={(event) => this.selectedPlaylistChange(event, 1)}></select>
+                <input id="retrievePlaylistButton2" type="button" onClick={() => this.refreshPlaylists(2)} value="Retrieve Playlists"></input>
+                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.songDictionaryArray[1]} playlistID={this.state.playlistIDArray[1]} index={1}/> }
+                {/* or. || doesn't work :(  */}
+                {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false" tracks={new SongDictionary()} index={1}/>}
+              </div> 
+                
             </div>
           </div>
         );
         
     }
-    selectedPlaylistChange = (event: any) => {
+    selectedPlaylistChange = (event: any, index: number) => {
       // this.setState({
       //   unique_uri: event.target.value,
       //   playlistSelected: true}, () => {
         console.log(event.target.value);
-        fetchTracks(event.target.value, 0, this.updatePlaylistStateAfterAddingTracks.bind(this));
+        fetchTracks(event.target.value, 0, index, this.updatePlaylistStateAfterAddingTracks.bind(this));
 
         // });
     }
-    updatePlaylistStateAfterAddingTracks(playlistID?: string, songDict?: {[id: string]: string}){
+    updatePlaylistStateAfterAddingTracks(index: number, songDict?: SongDictionary, playlistID?: string, ){
       // console.log(songDict);
       // console.log(playlistID);
-      this.songDict = songDict!;
+      this.songDictionaryArray[index] = songDict!;
+      // console.log(this.songDictionaryArray);
+      // console.log(this.songDictionaryArray[index]);
+      let playlistIDArray = this.state.playlistIDArray;
+      playlistIDArray[index] = playlistID;
 
       this.setState({playlistSelected: true,
-        playlistID: playlistID},
+        playlistIDArray: playlistIDArray},
        () => {
        });
     }
