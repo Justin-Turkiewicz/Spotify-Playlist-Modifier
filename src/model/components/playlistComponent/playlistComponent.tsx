@@ -90,7 +90,14 @@ export class PlayListComponent extends Component<loginProps, loginState>{
                 {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.songDictionaryArray[1]} playlistID={this.state.playlistIDArray[1]} index={1}/> }
                 {/* or. || doesn't work :(  */}
                 {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false" tracks={new SongDictionary()} index={1}/>}
-              </div> 
+              </div>
+              <div id="playlistAndRefreshButton3">
+                <select id="playlists3" onChange={(event) => this.selectedPlaylistChange(event, 2)}></select>
+                <input id="retrievePlaylistButton3" type="button" onClick={() => this.refreshPlaylists(3)} value="Retrieve Playlists"></input>
+                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.songDictionaryArray[2]} playlistID={this.state.playlistIDArray[2]} index={2}/> }
+                {/* or. || doesn't work :(  */}
+                {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false" tracks={new SongDictionary()} index={2}/>}
+              </div>  
                 
             </div>
           </div>

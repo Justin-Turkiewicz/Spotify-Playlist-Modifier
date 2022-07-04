@@ -9,6 +9,7 @@
 #spotPlaylist{
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
 }
 [id^="playlistAndRefreshButton"]{
     display: flex;

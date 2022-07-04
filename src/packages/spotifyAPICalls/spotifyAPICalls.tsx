@@ -123,7 +123,7 @@ export function handleTracksResponse(data: any, playlistID: string, index: numbe
     // removeAllItems("tracks");
     let songDict = new SongDictionary();
     data.items.forEach( (item: any, index: any) => addTrack(item, index, songDict));
-    console.log(songDict);
+    // console.log(songDict);
     // console.log(this.songDict);
     callback(index,songDict,playlistID);
 
