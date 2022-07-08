@@ -1,4 +1,5 @@
 import { SpotifyInfo } from "../../constants/spotify_info";
+import { Playlist } from "../../model/playlist/playlist";
 import { SongDictionary } from "../../model/songDictionary/songDictionary";
 
 export function callApi(method: any, url: any, body: any, client_id: any, access_token: any){
@@ -27,11 +28,15 @@ export function removeAllItems(elementId: string){
         node.removeChild(node.firstChild);
     }
 }
-export function addPlaylist(item: any, num: number){
+export function addPlaylist(item: any, num: number, playlistDictionary: Playlist[]){
     let node = document.createElement("option");
+    //Add track totals
     node.value = item.id;
     node.innerHTML = item.name + " (" + item.tracks.total + ")";
     document.getElementById("playlists"+num)?.appendChild(node);
+    let playlist = new Playlist(item.id, item.name, item.tracks.total);
+    playlistDictionary.push(playlist)
+    return playlistDictionary;
 }
 
 export function refreshAcessToken(client_id: string){
