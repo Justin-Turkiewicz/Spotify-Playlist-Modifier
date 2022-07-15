@@ -1,5 +1,6 @@
 import React from "react";
 import { Component } from "react";
+import { forEachChild } from "typescript";
 import { fetchTracks } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
 import { Playlist } from "../../playlist/playlist";
 import { SongDictionary } from "../../songDictionary/songDictionary";
@@ -35,6 +36,66 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
         }
 
     } 
+    moveLeft(){
+        let leftPos = this.props.index;
+        if(leftPos === 0){
+            leftPos = 3;
+        }
+        let str = "playlistAndRefreshButton"+(this.props.index+1)
+        // console.log(str);
+        let playlistAndRefreshButtonDiv = document.getElementById(str);
+        let listOfTrackCardsDiv = playlistAndRefreshButtonDiv?.getElementsByTagName("div")[4];
+        console.log(listOfTrackCardsDiv);
+        let children = listOfTrackCardsDiv!.children;
+        let childNodes = listOfTrackCardsDiv!.childNodes;
+        let listOfSelectedElements = []
+        for(let i = 0; i < children.length; i++){
+            if(children[i].className === "selected"){
+                listOfSelectedElements.push(childNodes[i]);
+
+            }
+
+        }
+        console.log(leftPos);
+        // console.log(listOfSelectedElements);
+        let leftStr = "playlistAndRefreshButton"+(leftPos);
+        let leftPlaylistAndRefreshButtonDiv = document.getElementById(leftStr);
+        let leftListOfTrackCardsDiv = leftPlaylistAndRefreshButtonDiv?.getElementsByTagName("div")[4];
+        console.log(leftListOfTrackCardsDiv);
+        for(let j = 0; j < listOfSelectedElements.length;j++){
+            leftListOfTrackCardsDiv?.appendChild(listOfSelectedElements[j])
+        }
+    }
+    moveRight(){
+        let rightPos = this.props.index + 2;
+        if(rightPos === 4){
+            rightPos = 1;
+        }
+        let str = "playlistAndRefreshButton"+(this.props.index+1)
+        // console.log(str);
+        let playlistAndRefreshButtonDiv = document.getElementById(str);
+        let listOfTrackCardsDiv = playlistAndRefreshButtonDiv?.getElementsByTagName("div")[4];
+        // console.log(listOfTrackCardsDiv);
+        let children = listOfTrackCardsDiv!.children;
+        let childNodes = listOfTrackCardsDiv!.childNodes;
+        let listOfSelectedElements = []
+        for(let i = 0; i < children.length; i++){
+            if(children[i].className === "selected"){
+                listOfSelectedElements.push(childNodes[i]);
+
+            }
+
+        }
+        console.log(rightPos);
+        // console.log(listOfSelectedElements);
+        let rightStr = "playlistAndRefreshButton"+(rightPos);
+        let rightPlaylistAndRefreshButtonDiv = document.getElementById(rightStr);
+        let rightListOfTrackCardsDiv = rightPlaylistAndRefreshButtonDiv?.getElementsByTagName("div")[4];
+        // console.log(rightListOfTrackCardsDiv);
+        for(let j = 0; j < listOfSelectedElements.length;j++){
+            rightListOfTrackCardsDiv?.appendChild(listOfSelectedElements[j])
+        }
+    }
     render(){
         let toDisplayTackComponent = (this.props.displayTrackComponent === "true");
         let last100Number = this.state.trackRangeCounter - 100;
@@ -68,7 +129,7 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
                 <div id="parentFlex">
                     <div id="tracks">
                         {toDisplayTackComponent  && <TracksComponent tracks={this.tracks}/>}
-                        {toDisplayTackComponent && <div id="trackButtonFlex">
+                        {toDisplayTackComponent && <div className="trackButtonFlex">
                             <input type="button" value="Last 100 Tracks" onClick={() => {
                                 this.ifClickedLast = true;
                                 fetchTracks(this.props.playlist!.id, last100Number, this.props.index,
@@ -80,6 +141,10 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
                             this.updateScaleStateAfterAddingTracks.bind(this))}
                             }></input>
                         </div> }
+                        {toDisplayTackComponent && <div className="trackButtonFlex">
+                            <input type="button" value="Move Selected Left" onClick={() => this.moveLeft()}></input>
+                            <input type="button" value="Move Selected Right" onClick={() => this.moveRight()}></input></div>}
+
 
                     </div>
                 </div>

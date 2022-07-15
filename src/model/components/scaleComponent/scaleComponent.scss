@@ -12,7 +12,7 @@
     flex-direction: column;
     flex-basis: 50%;
 }
-#scaleRow > *, #tracks > input, #trackButtonFlex > input{
+#scaleRow > *, #tracks > input, .trackButtonFlex > input{
     width: 10rem;
     background-color: purple;
     color: white;
@@ -38,15 +38,15 @@
 #getTracksFromSelectedPlaylistButton:hover{
     border-color: white;
 }
-#trackButtonFlex {
+.trackButtonFlex {
     display: flex;
     justify-content: center;
     gap: 1.5rem;
     width: 100%;
 }
-#trackButtonFlex > input{
+.trackButtonFlex > input{
     flex-basis: 25%;
 }
-#trackButtonFlex > input:hover{
+.trackButtonFlex > input:hover{
     border-color: white;
 }
