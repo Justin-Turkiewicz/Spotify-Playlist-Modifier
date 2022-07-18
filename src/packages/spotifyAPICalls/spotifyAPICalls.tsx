@@ -92,15 +92,7 @@ export function handleAuthorizationResponse(xhr: XMLHttpRequest, body: string, r
     console.log(xhr.readyState);
     }
   }
-export function addTrack(item: any, index: any, songDict: SongDictionary){
-    // let node = document.createElement("option");
-    // node.value = index;
-    // node.innerHTML = item.track.name + " (" + item.track.artists[0].name + ")";
-    // document.getElementById("trackss")!.appendChild(node); 
-    // console.log(songDict);
-    songDict.dictionary[index] = item.track.name;
-    return songDict;
-}
+
 // refreshAcessToken() {
 //     let refresh_token = localStorage.getItem("refresh_token");
 //     let body = "grant_type=refresh_token";
@@ -132,6 +124,16 @@ export function handleTracksResponse(data: any, playlistID: string, index: numbe
     // console.log(this.songDict);
     callback(index,songDict,playlistID);
 
+}
+export function addTrack(item: any, index: any, songDict: SongDictionary){
+  // let node = document.createElement("option");
+  // node.value = index;
+  // node.innerHTML = item.track.name + " (" + item.track.artists[0].name + ")";
+  // document.getElementById("trackss")!.appendChild(node); 
+  // console.log(songDict);
+  songDict.dictionary[index] = item.track.name;
+  songDict.dictionaryURI[index] = item.track.uri;
+  return songDict;
 }
 
 export function handleClick(idName: string){

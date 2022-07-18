@@ -1,6 +1,5 @@
 import React from "react";
 import { Component } from "react";
-import { forEachChild } from "typescript";
 import { SpotifyInfo } from "../../../constants/spotify_info";
 import { callApi, fetchTracks, handleClick } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
 import { Playlist } from "../../playlist/playlist";
@@ -153,7 +152,6 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
         if(next100Number >= this.props.playlist.trackAmount){
             next100Number = this.state.trackRangeCounter;
         }
-
         console.log("last100Number: "+last100Number);
         console.log("next100Number: "+next100Number);
         // console.log(this.props.playlist);
@@ -190,8 +188,6 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
                         {toDisplayTackComponent && <div className="trackButtonFlex">
                             <input type="button" value="Add Items to Playlist" onClick={() => this.addItemsToPlaylist()}></input>
                             </div>}
-
-
                     </div>
                 </div>
             </React.Fragment>

@@ -25,6 +25,7 @@ export class CardComponent extends Component<CardProps>{
         for(let i = 0;i<Object.keys(this.props.tracks.dictionary).length;i++) {
             let idName = "trackCard"+i+"pos:"+this.props.index;
             // console.log(this.state.songDict[i]);
+            console.log(this.props.tracks.dictionaryURI[i]);
             trackCards.push(<button id={idName} key={i} className="unselected" onClick={(e) => { 
                 handleClick(idName);
                 e.stopPropagation();}}>
