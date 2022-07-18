@@ -1,8 +1,10 @@
 import React, { Component, ReactNode } from "react";
+import { handleClick } from "../../../../packages/spotifyAPICalls/spotifyAPICalls";
 import { SongDictionary } from "../../../songDictionary/songDictionary";
 import "./cardComponent.scss";
 interface CardProps{
     tracks: SongDictionary;
+    index: number;
 }
 export class CardComponent extends Component<CardProps>{
     songName = "Track 1";
@@ -11,20 +13,7 @@ export class CardComponent extends Component<CardProps>{
     constructor(props: CardProps){
         super(props);
     }
-    handleClick(idName: string){
-        
-       let currentButton = document.getElementById(idName)
-       if(!currentButton?.classList.contains("selected")){
-        currentButton?.classList.add("selected");
-        currentButton?.classList.remove("unselected");
-       }else{
-        currentButton?.classList.remove("selected");
-        setTimeout(() => {
-            currentButton?.classList.add("unselected");
-        }, 1000)
 
-       }
-    }
     songDictionaryDefined(){
         return this.props.tracks! != undefined;
     }
@@ -34,9 +23,11 @@ export class CardComponent extends Component<CardProps>{
     createTracksOnPage(){
         let trackCards = [];
         for(let i = 0;i<Object.keys(this.props.tracks.dictionary).length;i++) {
-            let idName = "trackCard"+i
+            let idName = "trackCard"+i+"pos:"+this.props.index;
             // console.log(this.state.songDict[i]);
-            trackCards.push(<button id={idName} key={i} className="unselected" onClick={() => this.handleClick(idName)}>
+            trackCards.push(<button id={idName} key={i} className="unselected" onClick={(e) => { 
+                handleClick(idName);
+                e.stopPropagation();}}>
                 <label className="songNames">{this.props.tracks!.dictionary![i]}</label>
                 {/* <div className="songNumbers">{this.songNumber}</div> */}
             </button>);

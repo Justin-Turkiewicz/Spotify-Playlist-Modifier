@@ -1,7 +1,8 @@
 import React from "react";
 import { Component } from "react";
 import { forEachChild } from "typescript";
-import { fetchTracks } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
+import { SpotifyInfo } from "../../../constants/spotify_info";
+import { callApi, fetchTracks, handleClick } from "../../../packages/spotifyAPICalls/spotifyAPICalls";
 import { Playlist } from "../../playlist/playlist";
 import { SongDictionary } from "../../songDictionary/songDictionary";
 import { TracksComponent } from "../tracksComponent/tracksComponent";
@@ -51,8 +52,10 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
         let listOfSelectedElements = []
         for(let i = 0; i < children.length; i++){
             if(children[i].className === "selected"){
-                listOfSelectedElements.push(childNodes[i]);
-
+                let newChild : HTMLButtonElement  = children.item(i) as HTMLButtonElement;
+                newChild.id = "";
+                console.log(newChild);
+                listOfSelectedElements.push(newChild);
             }
 
         }
@@ -62,8 +65,26 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
         let leftPlaylistAndRefreshButtonDiv = document.getElementById(leftStr);
         let leftListOfTrackCardsDiv = leftPlaylistAndRefreshButtonDiv?.getElementsByTagName("div")[4];
         console.log(leftListOfTrackCardsDiv);
+        let amountOfTracksOnLeftDiv = leftListOfTrackCardsDiv?.children.length;
         for(let j = 0; j < listOfSelectedElements.length;j++){
+            let newString = "trackCard"+amountOfTracksOnLeftDiv+"pos:"+(leftPos-1);
+            listOfSelectedElements[j].id = newString;
+            listOfSelectedElements[j].onclick = (e) => {
+                handleClick(newString);
+                e.stopPropagation();
+            };
+            amountOfTracksOnLeftDiv!++;
             leftListOfTrackCardsDiv?.appendChild(listOfSelectedElements[j])
+        }
+        let updatedListOfTrackCardsDiv = document.getElementById(str)?.getElementsByTagName("div")[4];
+        let newDivChildren = updatedListOfTrackCardsDiv?.children;
+        let amountOfTracksOnOriginalDiv = newDivChildren?.length;
+        for(let k = 0; k < newDivChildren!.length;k++){
+            let nextString = "trackCard"+k+"pos:"+this.props.index;
+            newDivChildren![k].id = nextString;
+            (newDivChildren![k] as HTMLButtonElement).onclick = (e) => {
+                handleClick(nextString);
+                e.stopPropagation();}; 
         }
     }
     moveRight(){
@@ -81,20 +102,42 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
         let listOfSelectedElements = []
         for(let i = 0; i < children.length; i++){
             if(children[i].className === "selected"){
-                listOfSelectedElements.push(childNodes[i]);
-
+                let newChild : HTMLButtonElement  = children.item(i) as HTMLButtonElement;
+                newChild.id = "";
+                console.log(newChild);
+                listOfSelectedElements.push(newChild);
             }
-
         }
         console.log(rightPos);
-        // console.log(listOfSelectedElements);
+        console.log(listOfSelectedElements);
         let rightStr = "playlistAndRefreshButton"+(rightPos);
         let rightPlaylistAndRefreshButtonDiv = document.getElementById(rightStr);
         let rightListOfTrackCardsDiv = rightPlaylistAndRefreshButtonDiv?.getElementsByTagName("div")[4];
-        // console.log(rightListOfTrackCardsDiv);
+        console.log(rightListOfTrackCardsDiv);
+        let amountOfTracksOnRightDiv = rightListOfTrackCardsDiv?.children.length;
+        console.log(amountOfTracksOnRightDiv);
         for(let j = 0; j < listOfSelectedElements.length;j++){
+            let newString = "trackCard"+amountOfTracksOnRightDiv+"pos:"+(rightPos-1);
+            listOfSelectedElements[j].id = newString;
+            listOfSelectedElements[j].onclick = (e) => {
+                handleClick(newString);
+                e.stopPropagation();
+            };
+            // console.log(listOfSelectedElements[j].onclick?.toString());
+            amountOfTracksOnRightDiv!++;
             rightListOfTrackCardsDiv?.appendChild(listOfSelectedElements[j])
         }
+        let updatedListOfTrackCardsDiv = document.getElementById(str)?.getElementsByTagName("div")[4];
+        let newDivChildren = updatedListOfTrackCardsDiv?.children;
+        let amountOfTracksOnOriginalDiv = newDivChildren?.length;
+        for(let k = 0; k < newDivChildren!.length;k++){
+            let nextString = "trackCard"+k+"pos:"+this.props.index;
+            newDivChildren![k].id = nextString;
+            (newDivChildren![k] as HTMLButtonElement).onclick = (e) => {
+                handleClick(nextString);
+                e.stopPropagation();}; 
+        }
+        this.setState({});
     }
     render(){
         let toDisplayTackComponent = (this.props.displayTrackComponent === "true");
@@ -128,7 +171,7 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
                 <div id="RefreshPlaylistAndParentFlexSpacer"></div>
                 <div id="parentFlex">
                     <div id="tracks">
-                        {toDisplayTackComponent  && <TracksComponent tracks={this.tracks}/>}
+                        {toDisplayTackComponent  && <TracksComponent tracks={this.tracks} index={this.props.index}/>}
                         {toDisplayTackComponent && <div className="trackButtonFlex">
                             <input type="button" value="Last 100 Tracks" onClick={() => {
                                 this.ifClickedLast = true;
@@ -144,12 +187,24 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
                         {toDisplayTackComponent && <div className="trackButtonFlex">
                             <input type="button" value="Move Selected Left" onClick={() => this.moveLeft()}></input>
                             <input type="button" value="Move Selected Right" onClick={() => this.moveRight()}></input></div>}
+                        {toDisplayTackComponent && <div className="trackButtonFlex">
+                            <input type="button" value="Add Items to Playlist" onClick={() => this.addItemsToPlaylist()}></input>
+                            </div>}
 
 
                     </div>
                 </div>
             </React.Fragment>
         )
+    }
+    addItemsToPlaylist(){
+        let url = SpotifyInfo.tracks_url;
+        url = url.replace("{{PlaylistId}}", this.state.playlistID!);
+        console.log(url);
+        callApi("POST", url, null, sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
+            (data) =>
+          {
+          });
     }
     updateScaleStateAfterAddingTracks(index: number, songDict?: SongDictionary, playlistID?: string){
         console.log(songDict);

@@ -1,5 +1,6 @@
 #root{
   background:linear-gradient(rgb(86, 86, 28), rgb(197, 197, 43));
+  height: 100%;
 }
 #topBackground{
   width: 100%;
@@ -52,4 +53,9 @@ input[type=text], select {
 }
 #playlistScaleSpacer{
   height: 2.5rem;
+}
+html, body{
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
 }

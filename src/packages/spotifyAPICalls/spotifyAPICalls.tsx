@@ -133,3 +133,18 @@ export function handleTracksResponse(data: any, playlistID: string, index: numbe
     callback(index,songDict,playlistID);
 
 }
+
+export function handleClick(idName: string){
+  let currentButton = document.getElementById(idName);
+  console.log(currentButton?.onclick?.toString());
+  if(!currentButton?.classList.contains("selected")){
+   currentButton?.classList.add("selected");
+   currentButton?.classList.remove("unselected");
+  }else{
+   currentButton?.classList.remove("selected");
+   setTimeout(() => {
+       currentButton?.classList.add("unselected");
+   }, 250)
+
+  }
+}
