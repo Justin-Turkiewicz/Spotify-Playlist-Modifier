@@ -144,7 +144,8 @@ export class PlayListComponent extends Component<loginProps, loginState>{
         console.log(currentTracks); 
       }
       // console.log(tempAddedTracks);
-      this.setState({addedTracks: tempAddedTracks}, () => {})
+      this.setState({addedTracks: tempAddedTracks,
+      songDictionaryArray: currentTracks}, () => {})
     }
     selectedPlaylistChange = (event: any, index: number) => {
       // this.setState({
@@ -228,9 +229,73 @@ export class PlayListComponent extends Component<loginProps, loginState>{
       }
       return null;
     }
-
     removeSelectedTracksFromPlaylist(index: number){
-      
+      let str = "playlistAndRefreshButton"+(index+1);
+      let playlistAndRefreshButtonDiv = document.getElementById(str);
+      // console.log(playlistAndRefreshButtonDiv?.getElementsByTagName("div")[5]);
+      let listOfTrackCardsDiv = playlistAndRefreshButtonDiv?.getElementsByTagName("div")[5];
+      let children = listOfTrackCardsDiv?.children;
+      let selectedTracks: string[] = [];
+      // Find selected tracks and store them in selectedTracks array
+      for(let i = 0;i<children!.length;i++){
+        console.log(children![i].children[0].textContent);
+        if(children![i].className === "selected"){
+          let textContent = children![i].children[0].textContent
+          if(textContent != undefined){
+            selectedTracks.push(textContent)
+          }
+        }
+      }
+      console.log(selectedTracks);
+      // Get songDictionary from state for corresponding playlist with index
+      let newSongDictArray = this.state.songDictionaryArray;
+      let songDictionary = newSongDictArray[index];
+      let dict = songDictionary.dictionary;
+      let dictUri = songDictionary.dictionaryURI;
+      for(let j = 0; j < selectedTracks.length;j++){
+        let keyValue = Object.keys(dict).find(key => dict[key] === selectedTracks[j]);
+        if(keyValue != undefined){
+          delete dict[keyValue];
+          delete dictUri[keyValue];
+        }
+      }
+
+      console.log(dict);
+      let length = Object.keys(dict).length;
+      let dictValues = [];
+      let dictUriValues = [];
+      // Get values(name of song and uri) from the two dictionaries and delete
+      // those values in the dictionary
+      for(let key in dict){
+        dictValues.push(dict[key]);
+        delete dict[key];
+        dictUriValues.push(dictUri[key]);
+        delete dictUri[key];
+      }
+      console.log(dictValues);
+      console.log(dictUriValues);
+      console.log(dict);
+      console.log(dictUri);
+      for(let k = 0;k<dictValues.length;k++){
+        dict[k] = dictValues[k];
+        dictUri[k] = dictUriValues[k];
+      }
+      console.log(dict);
+      console.log(dictUri);
+      // Change selected class to unselected
+      let listOfTrackCardsDivNew = playlistAndRefreshButtonDiv?.getElementsByTagName("div")[5];
+      let childrenNew = listOfTrackCardsDiv?.children;
+      for(let h =0;h<childrenNew!.length;h++){
+        if(childrenNew![h].className === "selected"){
+          childrenNew![h].className = "unselected";
+        }
+      }
+      songDictionary.dictionary = dict;
+      songDictionary.dictionaryURI = dictUri;
+      newSongDictArray[index] = songDictionary;
+      this.setState({
+        songDictionaryArray: newSongDictArray
+      }, () => {})
     }
     }
 
