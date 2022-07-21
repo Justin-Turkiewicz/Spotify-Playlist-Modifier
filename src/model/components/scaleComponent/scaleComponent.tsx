@@ -46,7 +46,7 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
         let str = "playlistAndRefreshButton"+(this.props.index+1)
         // console.log(str);
         let playlistAndRefreshButtonDiv = document.getElementById(str);
-        let listOfTrackCardsDiv = playlistAndRefreshButtonDiv?.getElementsByTagName("div")[4];
+        let listOfTrackCardsDiv = playlistAndRefreshButtonDiv?.getElementsByTagName("div")[5];
         // console.log(listOfTrackCardsDiv);
         let children = listOfTrackCardsDiv!.children;
         let childNodes = listOfTrackCardsDiv!.childNodes;
@@ -65,7 +65,7 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
         // console.log(listOfSelectedElements);
         let leftStr = "playlistAndRefreshButton"+(leftPos);
         let leftPlaylistAndRefreshButtonDiv = document.getElementById(leftStr);
-        let leftListOfTrackCardsDiv = leftPlaylistAndRefreshButtonDiv?.getElementsByTagName("div")[4];
+        let leftListOfTrackCardsDiv = leftPlaylistAndRefreshButtonDiv?.getElementsByTagName("div")[5];
         console.log(leftListOfTrackCardsDiv);
         let amountOfTracksOnLeftDiv = leftListOfTrackCardsDiv?.children.length;
         for(let j = 0; j < listOfSelectedElements.length;j++){
@@ -81,7 +81,7 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
             amountOfTracksOnLeftDiv!++;
             // leftListOfTrackCardsDiv?.appendChild(listOfSelectedElements[j])
         }
-        let updatedListOfTrackCardsDiv = document.getElementById(str)?.getElementsByTagName("div")[4];
+        let updatedListOfTrackCardsDiv = document.getElementById(str)?.getElementsByTagName("div")[5];
         let newDivChildren = updatedListOfTrackCardsDiv?.children;
         let amountOfTracksOnOriginalDiv = newDivChildren?.length;
         for(let k = 0; k < newDivChildren!.length;k++){
@@ -102,7 +102,7 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
         let str = "playlistAndRefreshButton"+(this.props.index+1)
         // console.log(str);
         let playlistAndRefreshButtonDiv = document.getElementById(str);
-        let listOfTrackCardsDiv = playlistAndRefreshButtonDiv?.getElementsByTagName("div")[4];
+        let listOfTrackCardsDiv = playlistAndRefreshButtonDiv?.getElementsByTagName("div")[5];
         // console.log(listOfTrackCardsDiv);
         let children = listOfTrackCardsDiv!.children;
         let childNodes = listOfTrackCardsDiv!.childNodes;
@@ -122,7 +122,7 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
         let rightStr = "playlistAndRefreshButton"+(rightPos);
         // Get div containing the right playlist
         let rightPlaylistAndRefreshButtonDiv = document.getElementById(rightStr);
-        let rightListOfTrackCardsDiv = rightPlaylistAndRefreshButtonDiv?.getElementsByTagName("div")[4];
+        let rightListOfTrackCardsDiv = rightPlaylistAndRefreshButtonDiv?.getElementsByTagName("div")[5];
         // console.log(rightListOfTrackCardsDiv);
         let amountOfTracksOnRightDiv = rightListOfTrackCardsDiv?.children.length;
         // console.log(amountOfTracksOnRightDiv);
@@ -142,7 +142,7 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
             amountOfTracksOnRightDiv!++;
             // rightListOfTrackCardsDiv?.appendChild(listOfSelectedElements[j])
         }
-        let updatedListOfTrackCardsDiv = document.getElementById(str)?.getElementsByTagName("div")[4];
+        let updatedListOfTrackCardsDiv = document.getElementById(str)?.getElementsByTagName("div")[5];
         let newDivChildren = updatedListOfTrackCardsDiv?.children;
         let amountOfTracksOnOriginalDiv = newDivChildren?.length;
         for(let k = 0; k < newDivChildren!.length;k++){
