@@ -135,11 +135,11 @@ export class PlayListComponent extends Component<loginProps, loginState>{
           let indexOfElement = tempAddedTracks[originalIndex].indexOf(uri);
           tempAddedTracks[originalIndex].splice(indexOfElement, 1);
         }
-        tempAddedTracks[newIndex].push(uri);
+        tempAddedTracks[newIndex].push("spotify:track:"+uri);
         let amountOfKeys = Object.keys(currentTracks[newIndex].dictionary).length;
         console.log(amountOfKeys); 
         currentTracks[newIndex].dictionary[amountOfKeys] = songName;
-        currentTracks[newIndex].dictionaryURI[amountOfKeys] = uri;
+        currentTracks[newIndex].dictionaryURI[amountOfKeys] = "spotify:track:"+uri;
         console.log(songName);
         console.log(currentTracks); 
       }
@@ -252,13 +252,28 @@ export class PlayListComponent extends Component<loginProps, loginState>{
       let songDictionary = newSongDictArray[index];
       let dict = songDictionary.dictionary;
       let dictUri = songDictionary.dictionaryURI;
+      let selectedTracksUri = [];
       for(let j = 0; j < selectedTracks.length;j++){
         let keyValue = Object.keys(dict).find(key => dict[key] === selectedTracks[j]);
         if(keyValue != undefined){
           delete dict[keyValue];
+          selectedTracksUri.push(dictUri[keyValue]);
           delete dictUri[keyValue];
         }
       }
+      // Remove selected tracks from added tracks array
+      let localAddedTracks = this.state.addedTracks;
+      let localAddedTracksSubArray = localAddedTracks[index];
+      console.log(selectedTracksUri);
+      selectedTracksUri.forEach(ele => {
+        let localIndex = localAddedTracksSubArray.indexOf(ele);
+
+        if(localIndex > -1){
+          localAddedTracksSubArray.splice(localIndex, 1);
+        }
+      });
+      localAddedTracks[index] = localAddedTracksSubArray;
+      console.log(localAddedTracks);
 
       console.log(dict);
       let length = Object.keys(dict).length;
@@ -272,6 +287,7 @@ export class PlayListComponent extends Component<loginProps, loginState>{
         dictUriValues.push(dictUri[key]);
         delete dictUri[key];
       }
+      
       console.log(dictValues);
       console.log(dictUriValues);
       console.log(dict);
@@ -294,7 +310,8 @@ export class PlayListComponent extends Component<loginProps, loginState>{
       songDictionary.dictionaryURI = dictUri;
       newSongDictArray[index] = songDictionary;
       this.setState({
-        songDictionaryArray: newSongDictArray
+        songDictionaryArray: newSongDictArray,
+        addedTracks: localAddedTracks
       }, () => {})
     }
     }

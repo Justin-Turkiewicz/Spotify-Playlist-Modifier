@@ -148,7 +148,7 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
         for(let k = 0; k < newDivChildren!.length;k++){
             let indexWhereUriIs = newDivChildren![k].id.indexOf("track", 27) + 6;
             let uri = newDivChildren![k].id.substring(indexWhereUriIs);
-            let nextString = "trackCard"+k+"pos:"+this.props.index+"uri:spotify:track"+uri;
+            let nextString = "trackCard"+k+"pos:"+this.props.index+"uri:spotify:track:"+uri;
             newDivChildren![k].id = nextString;
             (newDivChildren![k] as HTMLButtonElement).onclick = (e) => {
                 handleClick(nextString);
@@ -220,10 +220,31 @@ export class ScaleComponent extends Component<ScaleProps, ScaleStates>{
         }
         console.log(url);
         console.log(this.props.tracksToAddToPlaylist);
-        // callApi("POST", url, null, sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
-        //     (data) =>
-        //   {
-        //   });
+        let tracksDisplayed = this.props.tracks;
+        console.log(tracksDisplayed);
+        console.log(this.state.songDict);
+        console.log(this.props.tracksToAddToPlaylist.map(ele => '"' + ele + '"').toString());
+        console.log(JSON.stringify(this.props.tracksToAddToPlaylist.map(ele => '"' + ele + '"').toString()));
+        let obj = this.props.tracksToAddToPlaylist.map(ele => '"' + ele + '"').toString()
+        // console.log(JSON.stringify([this.props.tracksToAddToPlaylist.toLocaleString()]))
+        // console.log(JSON.parse(this.props.tracksToAddToPlaylist.toString()));
+        console.log(Object.values(this.props.tracksToAddToPlaylist));
+        // No space betwee values in toString()
+        if(this.props.tracksToAddToPlaylist.length > 0){
+            let body = {
+                "uris": 
+                    Object.values(this.props.tracksToAddToPlaylist)
+                        // "spotify:track:4Y2glvLjQGOb4dXnwm1hQf", "spotify:track:5aZCwTIsfqv22p5bewcrgf"
+                    ,
+                "position": (Object.keys(tracksDisplayed.dictionary).length - Object.keys(this.props.tracksToAddToPlaylist).length)
+            }
+            console.log(body);
+            callApi("POST", url, JSON.stringify(body), sessionStorage.getItem("client_id"), sessionStorage.getItem("access_token")).then(
+                (data) =>
+            {
+                console.log(data);
+            });
+        }
     }
     updateScaleStateAfterAddingTracks(index: number, songDict?: SongDictionary, playlistID?: string){
         // console.log(songDict);
