@@ -14,6 +14,7 @@ interface loginState{
   playlistSelected: boolean
   currentlyDisplayedPlaylistArray: Playlist[]
   songDictionaryArray: SongDictionary[]
+  addedTracks: String[][]
 }
 export class PlayListComponent extends Component<loginProps, loginState>{
     xhr = new XMLHttpRequest();
@@ -27,7 +28,9 @@ export class PlayListComponent extends Component<loginProps, loginState>{
       this.state = {
         playlistSelected: false,
         currentlyDisplayedPlaylistArray: [Playlist],
-        songDictionaryArray: [SongDictionary]
+        songDictionaryArray: [SongDictionary],
+        // First 3 are where tracks added are
+        addedTracks: [[],[],[]]
       };  
       for(let i=0;i<3;i++){
         this.state.currentlyDisplayedPlaylistArray[i] = new Playlist();
@@ -83,67 +86,117 @@ export class PlayListComponent extends Component<loginProps, loginState>{
         }
     
     render(){
-
         return(
           <div className="row" id="playlistRow">
             <div id="spotPlaylist">
               <div id="playlistAndRefreshButton1">
                 <select id="playlists1" onChange={(event) => this.selectedPlaylistChange(event, 0)}></select>
-                <input id="retrievePlaylistButton1" type="button" onClick={() => this.refreshPlaylists(1)} value="Retrieve Playlists"></input>
-                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.state.songDictionaryArray[0]} playlist={this.state.currentlyDisplayedPlaylistArray[0]} index={0}/> }
+                <div className="playlistAndDeleteButtons">
+                  <input id="retrievePlaylistButton1" type="button" onClick={() => this.refreshPlaylists(1)} value="Retrieve Playlists"></input>
+                  <input id="deleteButton1" type="button" onClick={() => this.removeSelectedTracksFromPlaylist(0)} value="Delete Selected Tracks"></input>
+                </div>
+                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.state.songDictionaryArray[0]} playlist={this.state.currentlyDisplayedPlaylistArray[0]} index={0} addTrackToPlaylist={this.addSongUriForPlaylist} tracksToAddToPlaylist={this.state.addedTracks[0]}/> }
                 {/*or. || doesn't work :( */} 
-                {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false" tracks={new SongDictionary()} playlist={new Playlist()} index={0}/>}
+                {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false" tracks={new SongDictionary()} playlist={new Playlist()} index={0} addTrackToPlaylist={this.addSongUriForPlaylist} tracksToAddToPlaylist={this.state.addedTracks[0]}/>}
               </div>
               <div id="playlistAndRefreshButton2">
                 <select id="playlists2" onChange={(event) => this.selectedPlaylistChange(event, 1)}></select>
-                <input id="retrievePlaylistButton2" type="button" onClick={() => this.refreshPlaylists(2)} value="Retrieve Playlists"></input>
-                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.state.songDictionaryArray[1]} playlist={this.state.currentlyDisplayedPlaylistArray[1]} index={1}/> }
+                <div className="playlistAndDeleteButtons">
+                  <input id="retrievePlaylistButton2" type="button" onClick={() => this.refreshPlaylists(2)} value="Retrieve Playlists"></input>
+                  <input id="deleteButton2" type="button" onClick={() => this.removeSelectedTracksFromPlaylist(1)} value="Delete Selected Tracks"></input>
+                </div>
+                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.state.songDictionaryArray[1]} playlist={this.state.currentlyDisplayedPlaylistArray[1]} index={1} addTrackToPlaylist={this.addSongUriForPlaylist} tracksToAddToPlaylist={this.state.addedTracks[1]}/> }
                 {/* or. || doesn't work :(  */}
-                {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false" tracks={new SongDictionary()} playlist={new Playlist()} index={1}/>}
+                {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false" tracks={new SongDictionary()} playlist={new Playlist()} index={1} addTrackToPlaylist={this.addSongUriForPlaylist} tracksToAddToPlaylist={this.state.addedTracks[1]}/>}
               </div>
               <div id="playlistAndRefreshButton3">
                 <select id="playlists3" onChange={(event) => this.selectedPlaylistChange(event, 2)}></select>
-                <input id="retrievePlaylistButton3" type="button" onClick={() => this.refreshPlaylists(3)} value="Retrieve Playlists"></input>
-                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.state.songDictionaryArray[2]} playlist={this.state.currentlyDisplayedPlaylistArray[2]} index={2}/> }
-                {/* or. || doesn't work :(  */}
-                {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false" tracks={new SongDictionary()} playlist={new Playlist()} index={2}/>}
-              </div>  
+                <div className="playlistAndDeleteButtons">
+                  <input id="retrievePlaylistButton3" type="button" onClick={() => this.refreshPlaylists(3)} value="Retrieve Playlists"></input>
+                  <input id="deleteButton3" type="button" onClick={() => this.removeSelectedTracksFromPlaylist(2)} value="Delete Selected Tracks"></input>
+                </div>
                 
+                {this.state.playlistSelected && <ScaleComponent displayTrackComponent="true" tracks={this.state.songDictionaryArray[2]} playlist={this.state.currentlyDisplayedPlaylistArray[2]} index={2} addTrackToPlaylist={this.addSongUriForPlaylist} tracksToAddToPlaylist={this.state.addedTracks[2]}/> }
+                {/* or. || doesn't work :(  */}
+                {!this.state.playlistSelected && <ScaleComponent displayTrackComponent="false" tracks={new SongDictionary()} playlist={new Playlist()} index={2} addTrackToPlaylist={this.addSongUriForPlaylist} tracksToAddToPlaylist={this.state.addedTracks[2]}/>}
+              </div>  
             </div>
           </div>
         );
-        
+    }
+    // Allow sibling component to update addedTracks for other sibiling components(sibiling being the scale components)
+    addSongUriForPlaylist = (uri: String, songName: string, newIndex: number, originalIndex: number) => {
+      let tempAddedTracks = this.state.addedTracks;
+      let currentTracks = this.state.songDictionaryArray;
+      // If no duplicate in new playlist
+      if(!tempAddedTracks[newIndex].includes(uri)){
+        // If playlist originally had the track on startup or previously when moved
+        if(tempAddedTracks[originalIndex].includes(uri)){
+          let indexOfElement = tempAddedTracks[originalIndex].indexOf(uri);
+          tempAddedTracks[originalIndex].splice(indexOfElement, 1);
+        }
+        tempAddedTracks[newIndex].push(uri);
+        let amountOfKeys = Object.keys(currentTracks[newIndex].dictionary).length;
+        console.log(amountOfKeys); 
+        currentTracks[newIndex].dictionary[amountOfKeys] = songName;
+        currentTracks[newIndex].dictionaryURI[amountOfKeys] = uri;
+        console.log(songName);
+        console.log(currentTracks); 
+      }
+      // console.log(tempAddedTracks);
+      this.setState({addedTracks: tempAddedTracks}, () => {})
     }
     selectedPlaylistChange = (event: any, index: number) => {
       // this.setState({
       //   unique_uri: event.target.value,
       //   playlistSelected: true}, () => {
-        console.log(event.target.value);
+        // console.log(event.target.value);
         // STRIP Track number
         fetchTracks(event.target.value, 0, index, this.updatePlaylistStateAfterAddingTracks.bind(this));
 
         // });
     }
-    updatePlaylistStateAfterAddingTracks(index: number, songDict?: SongDictionary, playlistID?: string){
+    updatePlaylistStateAfterAddingTracks = (index: number, songDict?: SongDictionary, playlistID?: string) => {
       // console.log(songDict);
       // console.log(playlistID);
-      this.state.songDictionaryArray[index] = songDict!;
+      // this.state.songDictionaryArray[index] = songDict!;
       // console.log(this.songDictionaryArray);
       // console.log(this.songDictionaryArray[index]);
       let currentlyDisplayedPlaylistArray = this.state.currentlyDisplayedPlaylistArray;
       currentlyDisplayedPlaylistArray[index] = this.searchForPlaylistWithId(playlistID!);
-      console.log(this.playlistDictionaryArray);
-      console.log(currentlyDisplayedPlaylistArray);
+      // console.log(this.playlistDictionaryArray);
+      // console.log(currentlyDisplayedPlaylistArray);
       let songDictArray = this.state.songDictionaryArray;
       songDictArray[index] = songDict!;
-      console.log(songDictArray);
+      // console.log(songDictArray);
+      let updatedAddedTracks = this.state.addedTracks;
+      updatedAddedTracks[index] = [];
+      // console.log(updatedAddedTracks);
+      //Remove current tracks displayed in div
+      // console.log(index);
+      // let str = "playlistAndRefreshButton"+(index+1);
+      // let playlistAndRefreshButtonDiv = document.getElementById(str);
+      // console.log(playlistAndRefreshButtonDiv?.getElementsByTagName("div"));
+      // let listOfTrackCardsDiv = playlistAndRefreshButtonDiv?.getElementsByTagName("div")[4];
+      // console.log(listOfTrackCardsDiv);
+      // let childrenListOfTrackCardsDiv = listOfTrackCardsDiv?.children;
+      // console.log(childrenListOfTrackCardsDiv);
+      // console.log(listOfTrackCardsDiv?.children);
+            // let tracksArray = playlistAndRefreshButtonDiv?.getElementsByTagName("div")[3];
+      // let newListOfTrackCardsDiv = document.createElement("div");
+      // newListOfTrackCardsDiv.setAttribute("id", "listOfTrackCards");
+      // tracksArray?.appendChild(newListOfTrackCardsDiv);
+      // console.log(songDictArray);
       this.setState({playlistSelected: true,
         currentlyDisplayedPlaylistArray: currentlyDisplayedPlaylistArray,
-        songDictionaryArray: songDictArray
+        songDictionaryArray: songDictArray,
+        addedTracks: updatedAddedTracks
         },
        () => {
        });
-    }
+    
+  
+  }
     // fetchTracks(playlistID: string){
     //   console.log(playlistID);
     //   let url = SpotifyInfo.tracks_url;
@@ -174,6 +227,10 @@ export class PlayListComponent extends Component<loginProps, loginState>{
         }
       }
       return null;
+    }
+
+    removeSelectedTracksFromPlaylist(index: number){
+      
     }
     }
 

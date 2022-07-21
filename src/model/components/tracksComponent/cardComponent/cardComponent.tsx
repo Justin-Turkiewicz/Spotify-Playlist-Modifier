@@ -7,25 +7,27 @@ interface CardProps{
     index: number;
 }
 export class CardComponent extends Component<CardProps>{
-    songName = "Track 1";
-    songNumber = "1";
-
     constructor(props: CardProps){
         super(props);
     }
-
+    // componentDidUpdate(prevProps: any){
+    //     if(this.props.tracks != prevProps.tracks){
+    //         this.setState({}, () => {});
+    //     }
+    // }
     songDictionaryDefined(){
         return this.props.tracks! != undefined;
     }
     songDictionaryDictionaryDefined(){
         return this.props.tracks.dictionary! != undefined;
     }
-    createTracksOnPage(){
+    createTracksOnPage()  {
         let trackCards = [];
+
         for(let i = 0;i<Object.keys(this.props.tracks.dictionary).length;i++) {
-            let idName = "trackCard"+i+"pos:"+this.props.index;
+            let idName = "trackCard"+i+"pos:"+this.props.index+"uri:"+this.props.tracks.dictionaryURI[i];
             // console.log(this.state.songDict[i]);
-            console.log(this.props.tracks.dictionaryURI[i]);
+            // console.log(this.props.tracks.dictionaryURI[i]);
             trackCards.push(<button id={idName} key={i} className="unselected" onClick={(e) => { 
                 handleClick(idName);
                 e.stopPropagation();}}>
@@ -33,8 +35,8 @@ export class CardComponent extends Component<CardProps>{
                 {/* <div className="songNumbers">{this.songNumber}</div> */}
             </button>);
         }
-    // console.log(trackCards);
     return <div id="listOfTrackCards">{trackCards}</div>;
+    // return trackCards;
 }
     render(): ReactNode {
         return(
