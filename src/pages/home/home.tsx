@@ -126,12 +126,10 @@ render()  {
                 {/* <Navbar /> */}
                 <div className="row justify-content-center" id="secondRow">
                     <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="title">
-                        <h1>ClassifyTheSpot</h1>
+                        <h1>Spotify Playlist Modifier</h1>
                     </div>
                     <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="gistOfThePurpose">
-                        <p>ClassifyTheSpot allows you to rank your songs on your Spotify 
-                            account with a self-defined scale and creates
-                            seperate playlists for the songs in each tier of the scale.
+                        <p>Modify 3 of your spotify playlists simultaneously all on one page!
                         </p>
                     </div>
                 </div>
